@@ -9,5 +9,9 @@
   "license": "ISC",
   "dependencies": {
     "concurrently": "^9.1.1"
-  }
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
 }
