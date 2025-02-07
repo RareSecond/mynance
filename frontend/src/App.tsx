@@ -1,0 +1,23 @@
+import { Button } from "@mantine/core";
+import { useApi } from "./hooks/useApi";
+
+function App() {
+  const { data } = useApi("currentUser", "auth/user");
+  console.log("data :", data);
+
+  const handleGoogleLogin = () => {
+    const loginUrl = `${import.meta.env.VITE_API_URL}/auth/google/login?state=${
+      window.location.href
+    }`;
+    window.location.href = loginUrl;
+  };
+
+  return (
+    <>
+      <Button>Testing</Button>
+      <Button onClick={handleGoogleLogin}>Log in with Google</Button>
+    </>
+  );
+}
+
+export default App;

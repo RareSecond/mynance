@@ -1,0 +1,13 @@
+{
+  "name": "mynance",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "dev": "concurrently -n 'backend,frontend' -c 'blue.bold,green.bold' \"npm run start:dev --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.1"
+  }
+}
