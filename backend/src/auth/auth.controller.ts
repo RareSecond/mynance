@@ -14,12 +14,14 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req: Request) {
-    // Access the authenticated user from the request object
+  async googleAuthRedirect(@Req() req: Request) {
     const user = req['user'];
-    // Set cookie with user info
     const res = req['res'];
-    res.cookie('user', JSON.stringify(user), {
+
+    // Generate a JWT token instead of storing raw user data
+    const token = await this.authService.generateToken(user);
+
+    res.cookie('auth_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -27,14 +29,14 @@ export class AuthController {
         process.env.NODE_ENV === 'production' ? 'codictive.be' : 'localhost',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-    // Redirect back to frontend
+
     const state = req['query']?.state;
     res.redirect(state);
   }
 
   @Get('logout')
   logout(@Req() req: Request) {
-    req['res'].clearCookie('user', {
+    req['res'].clearCookie('auth_token', {
       domain:
         process.env.NODE_ENV === 'production' ? 'codictive.be' : 'localhost',
       sameSite: 'lax',
@@ -42,10 +44,5 @@ export class AuthController {
       httpOnly: true,
     });
     return { message: 'Logged out' };
-  }
-
-  @Get('user')
-  getUser(@Req() req: Request) {
-    return this.authService.getLoggedInUser(req);
   }
 }

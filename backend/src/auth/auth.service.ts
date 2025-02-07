@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  getLoggedInUser(req: Request) {
-    const userCookie = req['cookies']?.user;
-    if (!userCookie) {
-      return null;
-    }
-    return JSON.parse(userCookie);
+  constructor(private jwtService: JwtService) {}
+
+  async generateToken(user: { email: string }) {
+    const payload = { email: user.email };
+    return this.jwtService.sign(payload);
+  }
+
+  async verifyToken(token: string) {
+    return this.jwtService.verify(token);
   }
 }
