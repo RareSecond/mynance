@@ -1,10 +1,13 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-
+import { UserService } from '../user/user.service';
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @Get('google/login')
   @UseGuards(AuthGuard('google'))
@@ -15,8 +18,14 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req: Request) {
-    const user = req['user'];
+    const user = req['user'] as { email: string };
     const res = req['res'];
+
+    const existingUser = await this.userService.getUserByEmail(user.email);
+
+    if (!existingUser) {
+      await this.userService.createUser(user.email);
+    }
 
     // Generate a JWT token instead of storing raw user data
     const token = await this.authService.generateToken(user);
