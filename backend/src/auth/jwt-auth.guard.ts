@@ -1,9 +1,10 @@
 import { Injectable, ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { CurrentUserService } from 'src/current_user/current_user.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor() {
+  constructor(private currentUserService: CurrentUserService) {
     super();
   }
 
@@ -12,6 +13,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (!isValid) {
       return false;
     }
+
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+
+    // Set the user in the CurrentUserService
+    this.currentUserService.setUser(user);
 
     return true;
   }
