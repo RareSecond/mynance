@@ -31,6 +31,6 @@ import { CurrentUserService } from './current-user.service';
     JwtStrategy,
   ],
   controllers: [AuthController],
-  exports: [CurrentUserService],
+  exports: [CurrentUserService, JwtAuthGuard, UserModule],
 })
 export class AuthModule {}

@@ -11,6 +11,12 @@ export class UserService {
     });
   }
 
+  async getUserById(id: string) {
+    return this.db.user.findUnique({
+      where: { id },
+    });
+  }
+
   async createUser(email: string) {
     return this.db.user.create({
       data: { email },
