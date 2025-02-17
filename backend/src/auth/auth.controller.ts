@@ -2,11 +2,15 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
+import { CurrentUserService } from './current-user.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
+
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly currentUserService: CurrentUserService,
   ) {}
 
   @Get('google/login')
@@ -53,5 +57,11 @@ export class AuthController {
       httpOnly: true,
     });
     return { message: 'Logged out' };
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getCurrentUser() {
+    return this.currentUserService.getUser();
   }
 }

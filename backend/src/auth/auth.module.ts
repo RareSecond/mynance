@@ -8,8 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from '../user/user.module';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
-import { forwardRef } from '@nestjs/common';
-import { CurrentUserModule } from 'src/current_user/current_user.module';
+import { CurrentUserService } from './current-user.service';
 
 @Module({
   imports: [
@@ -23,9 +22,15 @@ import { CurrentUserModule } from 'src/current_user/current_user.module';
       inject: [ConfigService],
     }),
     UserModule,
-    forwardRef(() => CurrentUserModule),
   ],
-  providers: [AuthService, GoogleStrategy, JwtAuthGuard, JwtStrategy],
+  providers: [
+    AuthService,
+    CurrentUserService,
+    GoogleStrategy,
+    JwtAuthGuard,
+    JwtStrategy,
+  ],
   controllers: [AuthController],
+  exports: [CurrentUserService],
 })
 export class AuthModule {}
