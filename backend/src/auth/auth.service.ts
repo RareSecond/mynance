@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 
@@ -11,11 +15,15 @@ export class AuthService {
 
   async generateToken(user: { email: string }) {
     const dbUser = await this.userService.getUserByEmail(user.email);
-    const payload = { id: dbUser.id };
-    return this.jwtService.sign(payload);
-  }
+    if (!dbUser) {
+      throw new NotFoundException('User not found');
+    }
 
-  async verifyToken(token: string) {
-    return this.jwtService.verify(token);
+    try {
+      const payload = { id: dbUser.id };
+      return this.jwtService.sign(payload);
+    } catch (error) {
+      throw new UnauthorizedException('Failed to generate token');
+    }
   }
 }
