@@ -7,7 +7,6 @@ export class TestingService {
 
   getHello(): string {
     const user = this.currentUserService.getUser();
-    console.log('user :', user);
     return `Hello ${user.email}!`;
   }
 }

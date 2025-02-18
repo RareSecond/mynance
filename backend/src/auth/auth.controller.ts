@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { CurrentUserService } from './current-user.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { Public } from './public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -15,12 +16,14 @@ export class AuthController {
 
   @Get('google/login')
   @UseGuards(AuthGuard('google'))
+  @Public()
   async googleAuth() {
     // Initiates the Google OAuth2 login flow
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
+  @Public()
   async googleAuthRedirect(@Req() req: Request) {
     const user = req['user'] as { email: string };
     const res = req['res'];
