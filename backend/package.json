@@ -27,6 +27,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.10",
     "@prisma/client": "^6.3.1",
+    "axios": "^1.8.2",
     "cookie-parser": "^1.4.7",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
