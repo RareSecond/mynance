@@ -15,6 +15,7 @@ import { Route as NonAuthRoutesImport } from './routes/~_nonAuthRoutes'
 import { Route as AuthRoutesImport } from './routes/~_authRoutes'
 import { Route as NonAuthRoutesLoginImport } from './routes/~_nonAuthRoutes/~login'
 import { Route as AuthRoutesIndexImport } from './routes/~_authRoutes/~index'
+import { Route as AuthRoutesSettingsAccountsNewImport } from './routes/~_authRoutes/~settings/~accounts/~new'
 
 // Create/Update Routes
 
@@ -39,6 +40,13 @@ const AuthRoutesIndexRoute = AuthRoutesIndexImport.update({
   path: '/',
   getParentRoute: () => AuthRoutesRoute,
 } as any)
+
+const AuthRoutesSettingsAccountsNewRoute =
+  AuthRoutesSettingsAccountsNewImport.update({
+    id: '/settings/accounts/new',
+    path: '/settings/accounts/new',
+    getParentRoute: () => AuthRoutesRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -72,6 +80,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NonAuthRoutesLoginImport
       parentRoute: typeof NonAuthRoutesImport
     }
+    '/_authRoutes/settings/accounts/new': {
+      id: '/_authRoutes/settings/accounts/new'
+      path: '/settings/accounts/new'
+      fullPath: '/settings/accounts/new'
+      preLoaderRoute: typeof AuthRoutesSettingsAccountsNewImport
+      parentRoute: typeof AuthRoutesImport
+    }
   }
 }
 
@@ -79,10 +94,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthRoutesRouteChildren {
   AuthRoutesIndexRoute: typeof AuthRoutesIndexRoute
+  AuthRoutesSettingsAccountsNewRoute: typeof AuthRoutesSettingsAccountsNewRoute
 }
 
 const AuthRoutesRouteChildren: AuthRoutesRouteChildren = {
   AuthRoutesIndexRoute: AuthRoutesIndexRoute,
+  AuthRoutesSettingsAccountsNewRoute: AuthRoutesSettingsAccountsNewRoute,
 }
 
 const AuthRoutesRouteWithChildren = AuthRoutesRoute._addFileChildren(
@@ -105,12 +122,14 @@ export interface FileRoutesByFullPath {
   '': typeof NonAuthRoutesRouteWithChildren
   '/': typeof AuthRoutesIndexRoute
   '/login': typeof NonAuthRoutesLoginRoute
+  '/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
 }
 
 export interface FileRoutesByTo {
   '': typeof NonAuthRoutesRouteWithChildren
   '/': typeof AuthRoutesIndexRoute
   '/login': typeof NonAuthRoutesLoginRoute
+  '/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
 }
 
 export interface FileRoutesById {
@@ -119,19 +138,21 @@ export interface FileRoutesById {
   '/_nonAuthRoutes': typeof NonAuthRoutesRouteWithChildren
   '/_authRoutes/': typeof AuthRoutesIndexRoute
   '/_nonAuthRoutes/login': typeof NonAuthRoutesLoginRoute
+  '/_authRoutes/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/' | '/login'
+  fullPaths: '' | '/' | '/login' | '/settings/accounts/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/' | '/login'
+  to: '' | '/' | '/login' | '/settings/accounts/new'
   id:
     | '__root__'
     | '/_authRoutes'
     | '/_nonAuthRoutes'
     | '/_authRoutes/'
     | '/_nonAuthRoutes/login'
+    | '/_authRoutes/settings/accounts/new'
   fileRoutesById: FileRoutesById
 }
 
@@ -162,7 +183,8 @@ export const routeTree = rootRoute
     "/_authRoutes": {
       "filePath": "~_authRoutes.tsx",
       "children": [
-        "/_authRoutes/"
+        "/_authRoutes/",
+        "/_authRoutes/settings/accounts/new"
       ]
     },
     "/_nonAuthRoutes": {
@@ -178,6 +200,10 @@ export const routeTree = rootRoute
     "/_nonAuthRoutes/login": {
       "filePath": "~_nonAuthRoutes/~login.tsx",
       "parent": "/_nonAuthRoutes"
+    },
+    "/_authRoutes/settings/accounts/new": {
+      "filePath": "~_authRoutes/~settings/~accounts/~new.tsx",
+      "parent": "/_authRoutes"
     }
   }
 }
