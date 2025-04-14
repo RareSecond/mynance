@@ -18,5 +18,5 @@ function RouteComponent() {
     return <SelectBank />;
   }
 
-  return <StartLinkingProcess />;
+  return <StartLinkingProcess bankId={bankId} />;
 }

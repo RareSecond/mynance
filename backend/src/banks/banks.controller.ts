@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query, Redirect } from '@nestjs/common';
 import { BanksService } from './banks.service';
 import { GetBanksResponse } from '@mynance/types';
 
@@ -9,5 +9,11 @@ export class BanksController {
   @Get()
   async getBanks(): Promise<GetBanksResponse[]> {
     return this.banksService.getBanks();
+  }
+
+  @Get('link')
+  async createLink(@Query('bankId') bankId: string) {
+    const link = await this.banksService.createLink(bankId);
+    return link;
   }
 }

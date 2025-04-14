@@ -35,5 +35,30 @@ export class GoCardlessService {
 
     return res.data;
   }
+
+  async createEndUserAgreement(institutionId: string) {
+    const res = await this.axiosInstance.post(
+      'https://bankaccountdata.gocardless.com/api/v2/agreements/enduser/',
+      {
+        institution_id: institutionId,
+        max_historical_days: 365,
+      },
+    );
+
+    return res.data;
+  }
+
+  async createLink(bankId: string, agreementId: string, requisitionId: string) {
+    const res = await this.axiosInstance.post<{ link: string }>(
+      'https://bankaccountdata.gocardless.com/api/v2/requisitions/',
+      {
+        institution_id: bankId,
+        agreement: agreementId,
+        redirect: `${process.env.FRONTEND_URL}/requisition/${requisitionId}/callback`,
+        reference: requisitionId,
+      },
+    );
+
+    return res.data.link;
   }
 }

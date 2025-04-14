@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { BanksModule } from './banks/banks.module';
+import { RequisitionModule } from './requisition/requisition.module';
 @Module({
   imports: [
     AuthModule,
@@ -14,6 +15,7 @@ import { BanksModule } from './banks/banks.module';
     UserModule,
     DatabaseModule,
     BanksModule,
+    RequisitionModule,
   ],
   providers: [
     AppService,
