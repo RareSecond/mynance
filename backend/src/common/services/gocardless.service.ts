@@ -1,16 +1,6 @@
+import { GetBanksResponse } from '@mynance/types';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { ConfigService } from '@nestjs/config';
-
-export interface Institution {
-  id: string;
-  name: string;
-  bic: string;
-  transaction_total_days: string;
-  countries: string[];
-  logo: string;
-  max_access_valid_for_days: string;
-}
 
 @Injectable()
 export class GoCardlessService {
@@ -38,11 +28,12 @@ export class GoCardlessService {
     fetchAccessToken();
   }
 
-  async listBanks(): Promise<Institution[]> {
-    const request = await this.axiosInstance.get<Institution[]>(
+  async listBanks(): Promise<GetBanksResponse[]> {
+    const res = await this.axiosInstance.get<GetBanksResponse[]>(
       'https://bankaccountdata.gocardless.com/api/v2/institutions/?country=be',
     );
 
-    return request.data;
+    return res.data;
+  }
   }
 }

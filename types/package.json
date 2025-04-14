@@ -1,0 +1,23 @@
+{
+  "name": "@mynance/types",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "Shared TypeScript types"
+}
