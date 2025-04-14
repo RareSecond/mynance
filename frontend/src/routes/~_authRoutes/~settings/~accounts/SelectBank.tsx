@@ -4,11 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../../../data/api";
 import { match, P } from "ts-pattern";
 import { Text, Card } from "@mantine/core";
+import { GetBanksResponse } from "@mynance/types";
 
 export function SelectBank() {
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const { data: banks } = useQuery<any[]>({
+  const { data: banks } = useQuery<GetBanksResponse[]>({
     queryKey: ["banks"],
     queryFn: async () => {
       const res = await api.get("/banks");
@@ -17,8 +18,10 @@ export function SelectBank() {
   });
 
   return (
-    <div className="px-4">
-      <Text>Add a new account</Text>
+    <div>
+      <Text className="text-2xl font-bold mb-4 text-text-light">
+        Add a new account
+      </Text>
       {match(banks)
         .with(P.array(), (banks) => {
           return (
@@ -26,7 +29,7 @@ export function SelectBank() {
               {banks.map((bank) => (
                 <Card
                   key={bank.id}
-                  className="flex flex-row items-center gap-4"
+                  className="flex flex-row items-center gap-4 bg-dark-card cursor-pointer"
                   radius="lg"
                   onClick={() => {
                     navigate({
@@ -34,8 +37,12 @@ export function SelectBank() {
                     });
                   }}
                 >
-                  <img src={bank.logo} className="w-20 h-20 object-contain" />
-                  <Text className="text-2xl font-bold">{bank.name}</Text>
+                  <img
+                    src={bank.logo}
+                    className="w-10 h-10 object-contain"
+                    alt={bank.name}
+                  />
+                  <Text className="text-md font-bold">{bank.name}</Text>
                 </Card>
               ))}
             </div>

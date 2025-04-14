@@ -15,11 +15,11 @@ const TanStackRouterDevtools =
 
 export const Route = createRootRoute({
   component: () => (
-    <>
+    <div className="pt-8 px-4">
       <Outlet />
       <Suspense>
         <TanStackRouterDevtools />
       </Suspense>
-    </>
+    </div>
   ),
 });

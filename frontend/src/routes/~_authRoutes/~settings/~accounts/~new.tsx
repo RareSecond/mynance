@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SelectBank } from "./SelectBank";
-import { Loader, Text } from "@mantine/core";
+import { StartLinkingProcess } from "./StartLinkingProcess";
 
 export const Route = createFileRoute("/_authRoutes/settings/accounts/new")({
   component: RouteComponent,
@@ -18,10 +18,5 @@ function RouteComponent() {
     return <SelectBank />;
   }
 
-  return (
-    <div className="flex flex-col gap-4">
-      <Loader />
-      <Text>Adding account...</Text>
-    </div>
-  );
+  return <StartLinkingProcess />;
 }
