@@ -2,3 +2,20 @@
 
 @import "@mantine/core/styles.layer.css";
 @import "tailwindcss";
+
+@theme {
+  --color-purple-primary: #b388ff;
+  --color-purple-dark: #673ab7;
+  --color-purple-light: #d1c4e9;
+
+  --color-dark-bg: #1a1025;
+  --color-dark-card: #251b35;
+  --color-dark-secondary: #352a48;
+
+  --color-status-success: #10b981;
+  --color-status-warning: #f59e0b;
+  --color-status-danger: #ef4444;
+
+  --color-text-light: #ffffff;
+  --color-text-muted: #a9a3b9;
+}
