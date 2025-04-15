@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "../../../../../data/api";
 import { Card, Skeleton, Text, Button } from "@mantine/core";
 import { match, P } from "ts-pattern";
+import { SuccessIllustration } from "./SuccessIllustration";
 
 export const Route = createFileRoute(
   "/_authRoutes/settings/accounts/requisition/callback"
@@ -22,6 +23,29 @@ function RouteComponent() {
     queryKey: ["externalAccounts", ref],
     queryFn: () => api.get(`/requisition/${ref}/accounts`),
   });
+
+  const {
+    mutate: createAccounts,
+    isPending,
+    isSuccess,
+  } = useMutation({
+    mutationFn: () =>
+      api.post("/account", {
+        externalRequisitionId: ref,
+        accounts: data?.data.map((account) => account.id),
+      }),
+  });
+
+  if (isSuccess) {
+    return (
+      <div className="flex flex-col items-center justify-center ">
+        <SuccessIllustration />
+        <Text className="text-2xl font-bold mb-4">
+          Accounts linked successfully
+        </Text>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -48,6 +72,8 @@ function RouteComponent() {
         <Button
           className="bg-purple-primary text-white disabled:bg-purple-light"
           disabled={!data}
+          onClick={() => createAccounts()}
+          loading={isPending}
         >
           Link accounts
         </Button>

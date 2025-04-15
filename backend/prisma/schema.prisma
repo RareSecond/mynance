@@ -13,11 +13,12 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   requisitions Requisition[]
+  accounts     Account[]
 }
 
 model Requisition {
   id         String    @id @default(uuid())
-  externalId String
+  externalId String    @unique
   userId     String
   user       User      @relation(fields: [userId], references: [id])
   createdAt  DateTime  @default(now())
@@ -27,12 +28,16 @@ model Requisition {
 
 model Account {
   id            String        @id @default(uuid())
-  externalId    String
+  externalId    String        @unique
   requisitionId String
   requisition   Requisition   @relation(fields: [requisitionId], references: [id])
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   transactions  Transaction[]
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  iban          String
+  name          String
 }
 
 model Transaction {

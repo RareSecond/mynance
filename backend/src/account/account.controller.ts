@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { AccountService } from './account.service';
 
 @Controller('account')
@@ -10,5 +10,13 @@ export class AccountController {
     @Query('externalRequisitionId') externalRequisitionId: string,
   ) {
     return this.accountService.listAccounts(externalRequisitionId);
+  }
+
+  @Post()
+  async createAccounts(
+    @Body('externalRequisitionId') externalRequisitionId: string,
+    @Body('accounts') accounts: string[],
+  ) {
+    return this.accountService.createAccounts(externalRequisitionId, accounts);
   }
 }
