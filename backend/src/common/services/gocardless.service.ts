@@ -60,5 +60,36 @@ export class GoCardlessService {
 
     return res.data;
   }
+
+  async listAccounts(externalRequisitionId: string) {
+    const res = await this.axiosInstance.get<{
+      id: string;
+      status: string;
+      agreements: string;
+      reference: string;
+      accounts: string[];
+    }>(
+      `https://bankaccountdata.gocardless.com/api/v2/requisitions/${externalRequisitionId}`,
+    );
+
+    return res.data;
+  }
+
+  async getAccount(externalAccountId: string) {
+    const res = await this.axiosInstance.get<{
+      id: string;
+      created: string;
+      last_accessed: string;
+      iban: string;
+      bban: string;
+      status: string;
+      institution_id: string;
+      owner_name: string;
+      name: string;
+    }>(
+      `https://bankaccountdata.gocardless.com/api/v2/accounts/${externalAccountId}`,
+    );
+
+    return res.data;
   }
 }
