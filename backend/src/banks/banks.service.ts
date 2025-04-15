@@ -18,13 +18,12 @@ export class BanksService {
     const agreement =
       await this.goCardlessService.createEndUserAgreement(bankId);
 
-    const requisition = await this.requisitionService.createRequisition();
-
-    const link = await this.goCardlessService.createLink(
+    const { link, id } = await this.goCardlessService.createLink(
       bankId,
       agreement.id,
-      requisition.id,
     );
+
+    await this.requisitionService.createRequisition(id);
 
     return link;
   }

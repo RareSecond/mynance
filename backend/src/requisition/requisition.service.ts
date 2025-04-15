@@ -9,11 +9,11 @@ export class RequisitionService {
     private readonly currentUser: CurrentUserService,
   ) {}
 
-  async createRequisition() {
+  async createRequisition(externalId: string) {
     const user = this.currentUser.getUser();
 
     const requisition = await this.database.requisition.create({
-      data: { userId: user.id },
+      data: { userId: user.id, externalId },
     });
 
     return requisition;

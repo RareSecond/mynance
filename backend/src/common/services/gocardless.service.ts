@@ -48,17 +48,17 @@ export class GoCardlessService {
     return res.data;
   }
 
-  async createLink(bankId: string, agreementId: string, requisitionId: string) {
-    const res = await this.axiosInstance.post<{ link: string }>(
+  async createLink(bankId: string, agreementId: string) {
+    const res = await this.axiosInstance.post<{ link: string; id: string }>(
       'https://bankaccountdata.gocardless.com/api/v2/requisitions/',
       {
         institution_id: bankId,
         agreement: agreementId,
-        redirect: `${process.env.FRONTEND_URL}/requisition/${requisitionId}/callback`,
-        reference: requisitionId,
+        redirect: `${process.env.FRONTEND_URL}/settings/accounts/requisition/callback`,
       },
     );
 
-    return res.data.link;
+    return res.data;
+  }
   }
 }

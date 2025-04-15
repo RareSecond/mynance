@@ -17,7 +17,7 @@ model User {
 
 model Requisition {
   id         String    @id @default(uuid())
-  externalId String?
+  externalId String
   userId     String
   user       User      @relation(fields: [userId], references: [id])
   createdAt  DateTime  @default(now())
