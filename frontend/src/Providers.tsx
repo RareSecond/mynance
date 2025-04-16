@@ -17,6 +17,18 @@ const theme = createTheme({
       "#bc020c",
       "#a50007",
     ],
+    primary: [
+      "#f4e9ff",
+      "#e1cfff",
+      "#bf9cff",
+      "#9c65fe",
+      "#7f37fd",
+      "#6c1afd",
+      "#620bfe",
+      "#5200e3",
+      "#4800cb",
+      "#3d00b3",
+    ],
   },
 });
 

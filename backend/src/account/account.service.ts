@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { GoCardlessService } from '@/common/services/gocardless.service';
 import { DatabaseService } from '@/database/database.service';
 import { CurrentUserService } from '@/auth/current-user.service';
@@ -63,5 +67,19 @@ export class AccountService {
     );
 
     return gocardlessAccounts;
+  }
+
+  async getExternalAccountId(accountId: string) {
+    const account = await this.databaseService.account.findUnique({
+      where: {
+        id: accountId,
+      },
+    });
+
+    if (!account) {
+      throw new NotFoundException('Account not found');
+    }
+
+    return account.externalId;
   }
 }

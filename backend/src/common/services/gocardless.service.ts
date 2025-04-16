@@ -92,4 +92,24 @@ export class GoCardlessService {
 
     return res.data;
   }
+
+  async listTransactions(externalAccountId: string) {
+    try {
+      const res = await this.axiosInstance.get<{
+        id: string;
+        status: string;
+        agreements: string;
+        reference: string;
+        transactions: {
+          booked: any[];
+        };
+      }>(
+        `https://bankaccountdata.gocardless.com/api/v2/accounts/${externalAccountId}/transactions/`,
+      );
+      return res.data;
+    } catch (error) {
+      console.error('Error fetching transactions', error);
+      throw error;
+    }
+  }
 }

@@ -9,5 +9,6 @@ import { AuthModule } from '@/auth/auth.module';
   providers: [AccountService, GoCardlessService],
   controllers: [AccountController],
   imports: [DatabaseModule, AuthModule],
+  exports: [AccountService],
 })
 export class AccountModule {}
