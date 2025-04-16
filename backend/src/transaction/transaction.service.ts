@@ -14,9 +14,17 @@ export class TransactionService {
     private readonly accountService: AccountService,
   ) {}
 
-  async listTransactions(accountId: string) {
-    // return this.goCardlessService.listTransactions(accountId);
-    return data;
+  async listTransactions() {
+    const accounts = await this.accountService.listAccounts();
+    const transactions = await this.databaseService.transaction.findMany({
+      where: {
+        accountId: {
+          in: accounts.map((account) => account.id),
+        },
+      },
+    });
+
+    return transactions;
   }
 
   async importTransactions(accountId: string) {

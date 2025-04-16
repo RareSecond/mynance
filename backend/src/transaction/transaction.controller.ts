@@ -6,8 +6,8 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Get()
-  async listTransactions(@Query('accountId') accountId: string) {
-    return this.transactionService.listTransactions(accountId);
+  async listTransactions() {
+    return this.transactionService.listTransactions();
   }
 
   @Post('import')

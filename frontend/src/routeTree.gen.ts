@@ -15,9 +15,9 @@ import { Route as NonAuthRoutesImport } from './routes/~_nonAuthRoutes'
 import { Route as AuthRoutesImport } from './routes/~_authRoutes'
 import { Route as NonAuthRoutesLoginImport } from './routes/~_nonAuthRoutes/~login'
 import { Route as AuthRoutesIndexImport } from './routes/~_authRoutes/~index'
+import { Route as AuthRoutesTransactionsIndexImport } from './routes/~_authRoutes/~transactions/~index'
 import { Route as AuthRoutesSettingsIndexImport } from './routes/~_authRoutes/~settings/~index'
 import { Route as AuthRoutesSettingsAccountsNewImport } from './routes/~_authRoutes/~settings/~accounts/~new'
-import { Route as AuthRoutesSettingsAccountsListTransactionsImport } from './routes/~_authRoutes/~settings/~accounts/~listTransactions'
 import { Route as AuthRoutesSettingsAccountsIndexImport } from './routes/~_authRoutes/~settings/~accounts/~index'
 import { Route as AuthRoutesSettingsAccountsRequisitionCallbackImport } from './routes/~_authRoutes/~settings/~accounts/~requisition/~callback'
 
@@ -45,6 +45,13 @@ const AuthRoutesIndexRoute = AuthRoutesIndexImport.update({
   getParentRoute: () => AuthRoutesRoute,
 } as any)
 
+const AuthRoutesTransactionsIndexRoute =
+  AuthRoutesTransactionsIndexImport.update({
+    id: '/transactions/',
+    path: '/transactions/',
+    getParentRoute: () => AuthRoutesRoute,
+  } as any)
+
 const AuthRoutesSettingsIndexRoute = AuthRoutesSettingsIndexImport.update({
   id: '/settings/',
   path: '/settings/',
@@ -55,13 +62,6 @@ const AuthRoutesSettingsAccountsNewRoute =
   AuthRoutesSettingsAccountsNewImport.update({
     id: '/settings/accounts/new',
     path: '/settings/accounts/new',
-    getParentRoute: () => AuthRoutesRoute,
-  } as any)
-
-const AuthRoutesSettingsAccountsListTransactionsRoute =
-  AuthRoutesSettingsAccountsListTransactionsImport.update({
-    id: '/settings/accounts/listTransactions',
-    path: '/settings/accounts/listTransactions',
     getParentRoute: () => AuthRoutesRoute,
   } as any)
 
@@ -118,18 +118,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRoutesSettingsIndexImport
       parentRoute: typeof AuthRoutesImport
     }
+    '/_authRoutes/transactions/': {
+      id: '/_authRoutes/transactions/'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof AuthRoutesTransactionsIndexImport
+      parentRoute: typeof AuthRoutesImport
+    }
     '/_authRoutes/settings/accounts/': {
       id: '/_authRoutes/settings/accounts/'
       path: '/settings/accounts'
       fullPath: '/settings/accounts'
       preLoaderRoute: typeof AuthRoutesSettingsAccountsIndexImport
-      parentRoute: typeof AuthRoutesImport
-    }
-    '/_authRoutes/settings/accounts/listTransactions': {
-      id: '/_authRoutes/settings/accounts/listTransactions'
-      path: '/settings/accounts/listTransactions'
-      fullPath: '/settings/accounts/listTransactions'
-      preLoaderRoute: typeof AuthRoutesSettingsAccountsListTransactionsImport
       parentRoute: typeof AuthRoutesImport
     }
     '/_authRoutes/settings/accounts/new': {
@@ -154,8 +154,8 @@ declare module '@tanstack/react-router' {
 interface AuthRoutesRouteChildren {
   AuthRoutesIndexRoute: typeof AuthRoutesIndexRoute
   AuthRoutesSettingsIndexRoute: typeof AuthRoutesSettingsIndexRoute
+  AuthRoutesTransactionsIndexRoute: typeof AuthRoutesTransactionsIndexRoute
   AuthRoutesSettingsAccountsIndexRoute: typeof AuthRoutesSettingsAccountsIndexRoute
-  AuthRoutesSettingsAccountsListTransactionsRoute: typeof AuthRoutesSettingsAccountsListTransactionsRoute
   AuthRoutesSettingsAccountsNewRoute: typeof AuthRoutesSettingsAccountsNewRoute
   AuthRoutesSettingsAccountsRequisitionCallbackRoute: typeof AuthRoutesSettingsAccountsRequisitionCallbackRoute
 }
@@ -163,9 +163,8 @@ interface AuthRoutesRouteChildren {
 const AuthRoutesRouteChildren: AuthRoutesRouteChildren = {
   AuthRoutesIndexRoute: AuthRoutesIndexRoute,
   AuthRoutesSettingsIndexRoute: AuthRoutesSettingsIndexRoute,
+  AuthRoutesTransactionsIndexRoute: AuthRoutesTransactionsIndexRoute,
   AuthRoutesSettingsAccountsIndexRoute: AuthRoutesSettingsAccountsIndexRoute,
-  AuthRoutesSettingsAccountsListTransactionsRoute:
-    AuthRoutesSettingsAccountsListTransactionsRoute,
   AuthRoutesSettingsAccountsNewRoute: AuthRoutesSettingsAccountsNewRoute,
   AuthRoutesSettingsAccountsRequisitionCallbackRoute:
     AuthRoutesSettingsAccountsRequisitionCallbackRoute,
@@ -192,8 +191,8 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthRoutesIndexRoute
   '/login': typeof NonAuthRoutesLoginRoute
   '/settings': typeof AuthRoutesSettingsIndexRoute
+  '/transactions': typeof AuthRoutesTransactionsIndexRoute
   '/settings/accounts': typeof AuthRoutesSettingsAccountsIndexRoute
-  '/settings/accounts/listTransactions': typeof AuthRoutesSettingsAccountsListTransactionsRoute
   '/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
   '/settings/accounts/requisition/callback': typeof AuthRoutesSettingsAccountsRequisitionCallbackRoute
 }
@@ -203,8 +202,8 @@ export interface FileRoutesByTo {
   '/': typeof AuthRoutesIndexRoute
   '/login': typeof NonAuthRoutesLoginRoute
   '/settings': typeof AuthRoutesSettingsIndexRoute
+  '/transactions': typeof AuthRoutesTransactionsIndexRoute
   '/settings/accounts': typeof AuthRoutesSettingsAccountsIndexRoute
-  '/settings/accounts/listTransactions': typeof AuthRoutesSettingsAccountsListTransactionsRoute
   '/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
   '/settings/accounts/requisition/callback': typeof AuthRoutesSettingsAccountsRequisitionCallbackRoute
 }
@@ -216,8 +215,8 @@ export interface FileRoutesById {
   '/_authRoutes/': typeof AuthRoutesIndexRoute
   '/_nonAuthRoutes/login': typeof NonAuthRoutesLoginRoute
   '/_authRoutes/settings/': typeof AuthRoutesSettingsIndexRoute
+  '/_authRoutes/transactions/': typeof AuthRoutesTransactionsIndexRoute
   '/_authRoutes/settings/accounts/': typeof AuthRoutesSettingsAccountsIndexRoute
-  '/_authRoutes/settings/accounts/listTransactions': typeof AuthRoutesSettingsAccountsListTransactionsRoute
   '/_authRoutes/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
   '/_authRoutes/settings/accounts/requisition/callback': typeof AuthRoutesSettingsAccountsRequisitionCallbackRoute
 }
@@ -229,8 +228,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/settings'
+    | '/transactions'
     | '/settings/accounts'
-    | '/settings/accounts/listTransactions'
     | '/settings/accounts/new'
     | '/settings/accounts/requisition/callback'
   fileRoutesByTo: FileRoutesByTo
@@ -239,8 +238,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/settings'
+    | '/transactions'
     | '/settings/accounts'
-    | '/settings/accounts/listTransactions'
     | '/settings/accounts/new'
     | '/settings/accounts/requisition/callback'
   id:
@@ -250,8 +249,8 @@ export interface FileRouteTypes {
     | '/_authRoutes/'
     | '/_nonAuthRoutes/login'
     | '/_authRoutes/settings/'
+    | '/_authRoutes/transactions/'
     | '/_authRoutes/settings/accounts/'
-    | '/_authRoutes/settings/accounts/listTransactions'
     | '/_authRoutes/settings/accounts/new'
     | '/_authRoutes/settings/accounts/requisition/callback'
   fileRoutesById: FileRoutesById
@@ -286,8 +285,8 @@ export const routeTree = rootRoute
       "children": [
         "/_authRoutes/",
         "/_authRoutes/settings/",
+        "/_authRoutes/transactions/",
         "/_authRoutes/settings/accounts/",
-        "/_authRoutes/settings/accounts/listTransactions",
         "/_authRoutes/settings/accounts/new",
         "/_authRoutes/settings/accounts/requisition/callback"
       ]
@@ -310,12 +309,12 @@ export const routeTree = rootRoute
       "filePath": "~_authRoutes/~settings/~index.tsx",
       "parent": "/_authRoutes"
     },
-    "/_authRoutes/settings/accounts/": {
-      "filePath": "~_authRoutes/~settings/~accounts/~index.tsx",
+    "/_authRoutes/transactions/": {
+      "filePath": "~_authRoutes/~transactions/~index.tsx",
       "parent": "/_authRoutes"
     },
-    "/_authRoutes/settings/accounts/listTransactions": {
-      "filePath": "~_authRoutes/~settings/~accounts/~listTransactions.tsx",
+    "/_authRoutes/settings/accounts/": {
+      "filePath": "~_authRoutes/~settings/~accounts/~index.tsx",
       "parent": "/_authRoutes"
     },
     "/_authRoutes/settings/accounts/new": {
