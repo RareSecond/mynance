@@ -18,7 +18,10 @@ export function Transaction({ transaction }: { transaction: any }) {
         <Text
           className="text-sm font-bold"
           style={{
-            color: transaction.amount > 0 ? "green" : "red",
+            color:
+              transaction.amount > 0
+                ? "var(--color-status-success)"
+                : "var(--color-status-danger)",
           }}
         >
           {transaction.amount.toFixed(2)} {transaction.currency}

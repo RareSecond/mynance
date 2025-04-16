@@ -26,9 +26,9 @@ function RouteComponent() {
         {match(transactions)
           .with(P.nullish, () => (
             <>
-              <Skeleton height={100} />
-              <Skeleton height={100} />
-              <Skeleton height={100} />
+              <Skeleton height={57} />
+              <Skeleton height={57} />
+              <Skeleton height={57} />
             </>
           ))
           .otherwise((transactions) => (
