@@ -10,6 +10,7 @@ import { BanksModule } from './banks/banks.module';
 import { AccountModule } from './account/account.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { RequisitionModule } from './requisition/requisition.module';
+import { CategoryModule } from './category/category.module';
 @Module({
   imports: [
     AuthModule,
@@ -20,6 +21,7 @@ import { RequisitionModule } from './requisition/requisition.module';
     AccountModule,
     TransactionModule,
     RequisitionModule,
+    CategoryModule,
   ],
   providers: [
     AppService,

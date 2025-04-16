@@ -1,13 +1,15 @@
 import { Card, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Calendar, ChevronDown, Clock } from "lucide-react";
+import { Calendar, ChevronDown } from "lucide-react";
+import { format } from "date-fns";
+import { Category } from "./Category";
 
 export function Transaction({ transaction }: { transaction: any }) {
   const [opened, handlers] = useDisclosure(false);
 
   return (
     <Card
-      className="bg-dark-card p-4"
+      className="bg-dark-card p-4 overflow-visible"
       key={transaction.id}
       onClick={handlers.toggle}
     >
@@ -35,8 +37,11 @@ export function Transaction({ transaction }: { transaction: any }) {
           </Text>
           <div className="flex items-center text-text-muted flex-row gap-1">
             <Calendar size={14} />
-            <Text className=" text-sm">{transaction.createdAt}</Text>
+            <Text className=" text-sm">
+              {format(transaction.createdAt, "dd/MM/yyyy (HH:mm)")}
+            </Text>
           </div>
+          <Category transaction={transaction} />
         </>
       )}
     </Card>

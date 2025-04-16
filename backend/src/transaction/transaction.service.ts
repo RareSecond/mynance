@@ -1,6 +1,5 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { GoCardlessService } from '@/common/services/gocardless.service';
-import { data } from './data';
 import { match, P } from 'ts-pattern';
 import { parse } from 'date-fns';
 import { DatabaseService } from '@/database/database.service';
