@@ -11,8 +11,14 @@ export class AccountService {
     private readonly currentUserService: CurrentUserService,
   ) {}
 
-  async listAccounts(externalRequisitionId: string) {
-    return this.goCardlessService.listAccounts(externalRequisitionId);
+  async listAccounts() {
+    const user = this.currentUserService.getUser();
+
+    return this.databaseService.account.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
   }
 
   async createAccounts(externalRequisitionId: string, accounts: string[]) {
