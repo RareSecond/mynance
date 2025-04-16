@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { api } from "../data/api";
 import { UserContext } from "./~_authRoutes/UserContext";
+import { BottomNavigation } from "./BottomNavigation";
 
 export const Route = createFileRoute("/_authRoutes")({
   component: RouteComponent,
@@ -28,6 +29,7 @@ function RouteComponent() {
   return (
     <UserContext.Provider value={{ email: user.email }}>
       <Outlet />
+      <BottomNavigation />
     </UserContext.Provider>
   );
 }
