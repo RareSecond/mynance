@@ -1,7 +1,7 @@
 import { Tag, X } from "lucide-react";
 import { Combobox, InputBase, Text, useCombobox } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/data/api";
@@ -22,26 +22,29 @@ export function Category({ transaction }: { transaction: any }) {
 
   const [search, setSearch] = useState("");
 
-  const { mutate: createCategory } = useMutation({
-    mutationFn: async (category: string) => {
-      const res = await api.post("/category", { category });
-      return res.data;
-    },
-    onSuccess: (data) => {
-      refetch();
-      linkCategory(data.id);
-    },
-  });
+  const { mutate: createCategory, isPending: isCreatingCategory } = useMutation(
+    {
+      mutationFn: async (category: string) => {
+        const res = await api.post("/category", { category });
+        return res.data;
+      },
+      onSuccess: (data) => {
+        refetch();
+        linkCategory(data.id);
+      },
+    }
+  );
 
-  const { mutate: linkCategory } = useMutation({
+  const { mutate: linkCategory, isPending: isLinkingCategory } = useMutation({
     mutationFn: async (categoryId: string) => {
       const res = await api.post(`/transaction/${transaction.id}/category`, {
         categoryId,
       });
       return res.data;
     },
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["transactions"] });
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: ["transactions"] });
+      handlers.close();
     },
   });
 
@@ -52,7 +55,6 @@ export function Category({ transaction }: { transaction: any }) {
       linkCategory(val);
     }
 
-    handlers.close();
     combobox.closeDropdown();
   };
 
@@ -78,10 +80,6 @@ export function Category({ transaction }: { transaction: any }) {
       className="flex items-center text-text-muted flex-row gap-1"
       onClick={(e) => {
         e.stopPropagation();
-
-        if (!opened) {
-          handlers.open();
-        }
       }}
     >
       <Tag size={14} />
@@ -102,15 +100,15 @@ export function Category({ transaction }: { transaction: any }) {
                   combobox.updateSelectedOptionIndex();
                   setSearch(event.currentTarget.value);
                 }}
-                onClick={() => combobox.openDropdown()}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  combobox.openDropdown();
+                }}
                 onFocus={() => combobox.openDropdown()}
-                // onBlur={() => {
-                //   combobox.closeDropdown();
-                //   setSearch(value || "");
-                // }}
-                placeholder="Search value"
+                placeholder="Pick a category"
                 rightSectionPointerEvents="none"
                 size="sm"
+                disabled={isLinkingCategory || isCreatingCategory}
               />
             </Combobox.Target>
 
@@ -126,7 +124,20 @@ export function Category({ transaction }: { transaction: any }) {
             </Combobox.Dropdown>
           </Combobox>
         ))
-        .with(false, () => <Text className=" text-sm">Add a category..</Text>)
+        .with(false, () => (
+          <Text
+            className="text-sm"
+            onClick={() => {
+              handlers.open();
+            }}
+          >
+            {match(transaction.categories)
+              .with(P.nullish, () => "Add a category..")
+              .otherwise((categories) =>
+                categories.map((category) => category.category.name)
+              )}
+          </Text>
+        ))
         .exhaustive()}
     </div>
   );

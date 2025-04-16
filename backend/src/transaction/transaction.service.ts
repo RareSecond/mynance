@@ -21,6 +21,24 @@ export class TransactionService {
           in: accounts.map((account) => account.id),
         },
       },
+      select: {
+        id: true,
+        amount: true,
+        currency: true,
+        description: true,
+        counterPartyName: true,
+        createdAt: true,
+        categories: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     return transactions;
