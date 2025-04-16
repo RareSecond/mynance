@@ -115,6 +115,12 @@ export class TransactionService {
   async linkCategory(transactionId: string, categoryId: string) {
     const transaction = await this.get(transactionId);
 
+    await this.databaseService.transactionCategory.deleteMany({
+      where: {
+        transactionId,
+      },
+    });
+
     await this.databaseService.transactionCategory.create({
       data: {
         transactionId,

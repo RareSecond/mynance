@@ -49,7 +49,6 @@ export function Category({ transaction }: { transaction: any }) {
     if (val === "$create") {
       createCategory(search);
     } else {
-      setSearch(val);
       linkCategory(val);
     }
 
