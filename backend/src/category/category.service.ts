@@ -20,7 +20,7 @@ export class CategoryService {
   async create(category: string) {
     const user = this.currentUserService.getUser();
 
-    await this.databaseService.category.create({
+    return this.databaseService.category.create({
       data: {
         name: category,
         userId: user.id,

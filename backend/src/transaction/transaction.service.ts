@@ -26,6 +26,16 @@ export class TransactionService {
     return transactions;
   }
 
+  async get(transactionId: string) {
+    const transaction = await this.databaseService.transaction.findUnique({
+      where: {
+        id: transactionId,
+      },
+    });
+
+    return transaction;
+  }
+
   async importTransactions(accountId: string) {
     const externalAccountId =
       await this.accountService.getExternalAccountId(accountId);
@@ -100,5 +110,17 @@ export class TransactionService {
     }
 
     return 'Unknown';
+  }
+
+  async linkCategory(transactionId: string, categoryId: string) {
+    const transaction = await this.get(transactionId);
+
+    await this.databaseService.transactionCategory.create({
+      data: {
+        transactionId,
+        categoryId,
+        amount: transaction.amount,
+      },
+    });
   }
 }

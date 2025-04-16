@@ -3,7 +3,7 @@ import { Combobox, InputBase, Text, useCombobox } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { match } from "ts-pattern";
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/data/api";
 
 export function Category({ transaction }: { transaction: any }) {
@@ -14,6 +14,7 @@ export function Category({ transaction }: { transaction: any }) {
       return res.data;
     },
   });
+  const queryClient = useQueryClient();
   const [opened, handlers] = useDisclosure(false);
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -26,8 +27,21 @@ export function Category({ transaction }: { transaction: any }) {
       const res = await api.post("/category", { category });
       return res.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       refetch();
+      linkCategory(data.id);
+    },
+  });
+
+  const { mutate: linkCategory } = useMutation({
+    mutationFn: async (categoryId: string) => {
+      const res = await api.post(`/transaction/${transaction.id}/category`, {
+        categoryId,
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ["transactions"] });
     },
   });
 
@@ -36,6 +50,7 @@ export function Category({ transaction }: { transaction: any }) {
       createCategory(search);
     } else {
       setSearch(val);
+      linkCategory(val);
     }
 
     handlers.close();
@@ -54,7 +69,7 @@ export function Category({ transaction }: { transaction: any }) {
       );
 
   const options = filteredOptions.map((category: any) => (
-    <Combobox.Option value={category.name} key={category.id}>
+    <Combobox.Option value={category.id} key={category.id}>
       {category.name}
     </Combobox.Option>
   ));
