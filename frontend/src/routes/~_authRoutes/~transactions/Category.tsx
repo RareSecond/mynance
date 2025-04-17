@@ -21,7 +21,7 @@ export function Category({ transaction }: { transaction: any }) {
     },
   });
   const queryClient = useQueryClient();
-  const [opened, handlers] = useDisclosure(false);
+  const [opened, handlers] = useDisclosure(transaction.categories.length === 0);
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -52,7 +52,10 @@ export function Category({ transaction }: { transaction: any }) {
       return res.data;
     },
     onSuccess: async () => {
-      await queryClient.refetchQueries({ queryKey: ["transactions"] });
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["allTransactions"] }),
+        queryClient.refetchQueries({ queryKey: ["uncategorizedTransactions"] }),
+      ]);
       handlers.close();
     },
   });
@@ -99,7 +102,7 @@ export function Category({ transaction }: { transaction: any }) {
             store={combobox}
             withinPortal={false}
             onOptionSubmit={onSubmit}
-            size="sm"
+            size="xs"
           >
             <Combobox.Target>
               <InputBase
@@ -118,8 +121,11 @@ export function Category({ transaction }: { transaction: any }) {
                 onFocus={() => combobox.openDropdown()}
                 placeholder="Pick a category"
                 rightSectionPointerEvents="none"
-                size="sm"
+                size="xs"
                 disabled={isLinkingCategory || isCreatingCategory}
+                classNames={{
+                  input: "bg-dark-secondary text-text-muted border-none",
+                }}
               />
             </Combobox.Target>
 

@@ -4,8 +4,14 @@ import { Calendar, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import { Category } from "./Category";
 
-export function Transaction({ transaction }: { transaction: any }) {
-  const [opened, handlers] = useDisclosure(false);
+export function Transaction({
+  transaction,
+  defaultOpen = false,
+}: {
+  transaction: any;
+  defaultOpen?: boolean;
+}) {
+  const [opened, handlers] = useDisclosure(defaultOpen);
 
   return (
     <Card

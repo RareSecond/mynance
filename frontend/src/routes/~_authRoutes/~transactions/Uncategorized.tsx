@@ -32,7 +32,11 @@ export function Uncategorized() {
         .otherwise((transactions) => (
           <>
             {transactions.map((transaction) => (
-              <Transaction key={transaction.id} transaction={transaction} />
+              <Transaction
+                key={transaction.id}
+                transaction={transaction}
+                defaultOpen={true}
+              />
             ))}
           </>
         ))}
