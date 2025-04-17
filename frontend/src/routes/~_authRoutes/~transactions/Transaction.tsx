@@ -1,4 +1,4 @@
-import { Card, Text } from "@mantine/core";
+import { Card, Collapse, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Calendar, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
@@ -30,7 +30,7 @@ export function Transaction({ transaction }: { transaction: any }) {
         </Text>
         <ChevronDown size={16} />
       </div>
-      {opened && (
+      <Collapse in={opened}>
         <>
           <Text className="text-text-muted text-sm">
             {transaction.description}
@@ -43,7 +43,7 @@ export function Transaction({ transaction }: { transaction: any }) {
           </div>
           <Category transaction={transaction} />
         </>
-      )}
+      </Collapse>
     </Card>
   );
 }
