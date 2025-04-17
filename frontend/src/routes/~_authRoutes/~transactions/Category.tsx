@@ -1,5 +1,11 @@
 import { Tag, X } from "lucide-react";
-import { Combobox, InputBase, Text, useCombobox } from "@mantine/core";
+import {
+  Combobox,
+  ComboboxOptionProps,
+  InputBase,
+  Text,
+  useCombobox,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { match, P } from "ts-pattern";
 import { useState } from "react";
@@ -21,6 +27,9 @@ export function Category({ transaction }: { transaction: any }) {
   });
 
   const [search, setSearch] = useState("");
+  const [value, setValue] = useState(
+    transaction.categories?.[0]?.category.name || ""
+  );
 
   const { mutate: createCategory, isPending: isCreatingCategory } = useMutation(
     {
@@ -48,10 +57,11 @@ export function Category({ transaction }: { transaction: any }) {
     },
   });
 
-  const onSubmit = (val: string) => {
+  const onSubmit = (val: string, optionProps: ComboboxOptionProps) => {
     if (val === "$create") {
       createCategory(search);
     } else {
+      setValue(optionProps.children as string);
       linkCategory(val);
     }
 
@@ -94,11 +104,12 @@ export function Category({ transaction }: { transaction: any }) {
             <Combobox.Target>
               <InputBase
                 rightSection={<Combobox.Chevron />}
-                value={search}
+                value={search || value}
                 onChange={(event) => {
                   combobox.openDropdown();
                   combobox.updateSelectedOptionIndex();
                   setSearch(event.currentTarget.value);
+                  setValue(event.currentTarget.value);
                 }}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -132,7 +143,7 @@ export function Category({ transaction }: { transaction: any }) {
             }}
           >
             {match(transaction.categories)
-              .with(P.nullish, () => "Add a category..")
+              .with([], () => "Add a category..")
               .otherwise((categories) =>
                 categories.map((category) => category.category.name)
               )}
