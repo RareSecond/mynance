@@ -13,14 +13,25 @@ export class TransactionService {
     private readonly accountService: AccountService,
   ) {}
 
-  async listTransactions() {
+  async listTransactions(uncategorizedOnly: boolean) {
     const accounts = await this.accountService.listAccounts();
     const transactions = await this.databaseService.transaction.findMany({
       where: {
         accountId: {
           in: accounts.map((account) => account.id),
         },
+        ...(uncategorizedOnly
+          ? {
+              categories: {
+                none: {},
+              },
+            }
+          : {}),
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 100,
       select: {
         id: true,
         amount: true,

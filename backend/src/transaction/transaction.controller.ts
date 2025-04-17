@@ -6,8 +6,12 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Get()
-  async listTransactions() {
-    return this.transactionService.listTransactions();
+  async listTransactions(
+    @Query('uncategorizedOnly') uncategorizedOnly?: string,
+  ) {
+    return this.transactionService.listTransactions(
+      uncategorizedOnly === 'true',
+    );
   }
 
   @Post('import')

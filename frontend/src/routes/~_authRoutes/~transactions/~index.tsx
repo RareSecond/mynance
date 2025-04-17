@@ -1,7 +1,8 @@
 import { PageTitle } from "@/components/PageTitle";
 import { createFileRoute } from "@tanstack/react-router";
-import { Tabs, Text } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 import { AllTransactions } from "./AllTransactions";
+import { Uncategorized } from "./Uncategorized";
 
 export const Route = createFileRoute("/_authRoutes/transactions/")({
   component: RouteComponent,
@@ -24,9 +25,7 @@ function RouteComponent() {
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="uncategorized">
-          <div className="flex flex-col gap-2">
-            <Text>Categories</Text>
-          </div>
+          <Uncategorized />
         </Tabs.Panel>
         <Tabs.Panel value="all">
           <AllTransactions />
