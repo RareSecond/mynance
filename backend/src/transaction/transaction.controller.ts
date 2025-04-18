@@ -14,6 +14,11 @@ export class TransactionController {
     );
   }
 
+  @Get('analytics')
+  async getAnalytics() {
+    return this.transactionService.getAnalytics();
+  }
+
   @Post('import')
   async importTransactions(@Body('accountId') accountId: string) {
     return this.transactionService.importTransactions(accountId);

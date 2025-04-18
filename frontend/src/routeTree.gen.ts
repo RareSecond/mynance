@@ -17,6 +17,7 @@ import { Route as NonAuthRoutesLoginImport } from './routes/~_nonAuthRoutes/~log
 import { Route as AuthRoutesIndexImport } from './routes/~_authRoutes/~index'
 import { Route as AuthRoutesTransactionsIndexImport } from './routes/~_authRoutes/~transactions/~index'
 import { Route as AuthRoutesSettingsIndexImport } from './routes/~_authRoutes/~settings/~index'
+import { Route as AuthRoutesAnalyticsIndexImport } from './routes/~_authRoutes/~analytics/~index'
 import { Route as AuthRoutesSettingsAccountsNewImport } from './routes/~_authRoutes/~settings/~accounts/~new'
 import { Route as AuthRoutesSettingsAccountsIndexImport } from './routes/~_authRoutes/~settings/~accounts/~index'
 import { Route as AuthRoutesSettingsAccountsRequisitionCallbackImport } from './routes/~_authRoutes/~settings/~accounts/~requisition/~callback'
@@ -55,6 +56,12 @@ const AuthRoutesTransactionsIndexRoute =
 const AuthRoutesSettingsIndexRoute = AuthRoutesSettingsIndexImport.update({
   id: '/settings/',
   path: '/settings/',
+  getParentRoute: () => AuthRoutesRoute,
+} as any)
+
+const AuthRoutesAnalyticsIndexRoute = AuthRoutesAnalyticsIndexImport.update({
+  id: '/analytics/',
+  path: '/analytics/',
   getParentRoute: () => AuthRoutesRoute,
 } as any)
 
@@ -111,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NonAuthRoutesLoginImport
       parentRoute: typeof NonAuthRoutesImport
     }
+    '/_authRoutes/analytics/': {
+      id: '/_authRoutes/analytics/'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthRoutesAnalyticsIndexImport
+      parentRoute: typeof AuthRoutesImport
+    }
     '/_authRoutes/settings/': {
       id: '/_authRoutes/settings/'
       path: '/settings'
@@ -153,6 +167,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthRoutesRouteChildren {
   AuthRoutesIndexRoute: typeof AuthRoutesIndexRoute
+  AuthRoutesAnalyticsIndexRoute: typeof AuthRoutesAnalyticsIndexRoute
   AuthRoutesSettingsIndexRoute: typeof AuthRoutesSettingsIndexRoute
   AuthRoutesTransactionsIndexRoute: typeof AuthRoutesTransactionsIndexRoute
   AuthRoutesSettingsAccountsIndexRoute: typeof AuthRoutesSettingsAccountsIndexRoute
@@ -162,6 +177,7 @@ interface AuthRoutesRouteChildren {
 
 const AuthRoutesRouteChildren: AuthRoutesRouteChildren = {
   AuthRoutesIndexRoute: AuthRoutesIndexRoute,
+  AuthRoutesAnalyticsIndexRoute: AuthRoutesAnalyticsIndexRoute,
   AuthRoutesSettingsIndexRoute: AuthRoutesSettingsIndexRoute,
   AuthRoutesTransactionsIndexRoute: AuthRoutesTransactionsIndexRoute,
   AuthRoutesSettingsAccountsIndexRoute: AuthRoutesSettingsAccountsIndexRoute,
@@ -190,6 +206,7 @@ export interface FileRoutesByFullPath {
   '': typeof NonAuthRoutesRouteWithChildren
   '/': typeof AuthRoutesIndexRoute
   '/login': typeof NonAuthRoutesLoginRoute
+  '/analytics': typeof AuthRoutesAnalyticsIndexRoute
   '/settings': typeof AuthRoutesSettingsIndexRoute
   '/transactions': typeof AuthRoutesTransactionsIndexRoute
   '/settings/accounts': typeof AuthRoutesSettingsAccountsIndexRoute
@@ -201,6 +218,7 @@ export interface FileRoutesByTo {
   '': typeof NonAuthRoutesRouteWithChildren
   '/': typeof AuthRoutesIndexRoute
   '/login': typeof NonAuthRoutesLoginRoute
+  '/analytics': typeof AuthRoutesAnalyticsIndexRoute
   '/settings': typeof AuthRoutesSettingsIndexRoute
   '/transactions': typeof AuthRoutesTransactionsIndexRoute
   '/settings/accounts': typeof AuthRoutesSettingsAccountsIndexRoute
@@ -214,6 +232,7 @@ export interface FileRoutesById {
   '/_nonAuthRoutes': typeof NonAuthRoutesRouteWithChildren
   '/_authRoutes/': typeof AuthRoutesIndexRoute
   '/_nonAuthRoutes/login': typeof NonAuthRoutesLoginRoute
+  '/_authRoutes/analytics/': typeof AuthRoutesAnalyticsIndexRoute
   '/_authRoutes/settings/': typeof AuthRoutesSettingsIndexRoute
   '/_authRoutes/transactions/': typeof AuthRoutesTransactionsIndexRoute
   '/_authRoutes/settings/accounts/': typeof AuthRoutesSettingsAccountsIndexRoute
@@ -227,6 +246,7 @@ export interface FileRouteTypes {
     | ''
     | '/'
     | '/login'
+    | '/analytics'
     | '/settings'
     | '/transactions'
     | '/settings/accounts'
@@ -237,6 +257,7 @@ export interface FileRouteTypes {
     | ''
     | '/'
     | '/login'
+    | '/analytics'
     | '/settings'
     | '/transactions'
     | '/settings/accounts'
@@ -248,6 +269,7 @@ export interface FileRouteTypes {
     | '/_nonAuthRoutes'
     | '/_authRoutes/'
     | '/_nonAuthRoutes/login'
+    | '/_authRoutes/analytics/'
     | '/_authRoutes/settings/'
     | '/_authRoutes/transactions/'
     | '/_authRoutes/settings/accounts/'
@@ -284,6 +306,7 @@ export const routeTree = rootRoute
       "filePath": "~_authRoutes.tsx",
       "children": [
         "/_authRoutes/",
+        "/_authRoutes/analytics/",
         "/_authRoutes/settings/",
         "/_authRoutes/transactions/",
         "/_authRoutes/settings/accounts/",
@@ -304,6 +327,10 @@ export const routeTree = rootRoute
     "/_nonAuthRoutes/login": {
       "filePath": "~_nonAuthRoutes/~login.tsx",
       "parent": "/_nonAuthRoutes"
+    },
+    "/_authRoutes/analytics/": {
+      "filePath": "~_authRoutes/~analytics/~index.tsx",
+      "parent": "/_authRoutes"
     },
     "/_authRoutes/settings/": {
       "filePath": "~_authRoutes/~settings/~index.tsx",

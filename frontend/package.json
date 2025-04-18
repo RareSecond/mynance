@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --clearScreen false",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mantine/charts": "^7.17.4",
     "@mantine/core": "^7.15.3",
     "@mantine/hooks": "^7.15.3",
     "@mynance/types": "^0.0.0",

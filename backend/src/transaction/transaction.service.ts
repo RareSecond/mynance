@@ -4,6 +4,7 @@ import { match, P } from 'ts-pattern';
 import { parse } from 'date-fns';
 import { DatabaseService } from '@/database/database.service';
 import { AccountService } from '@/account/account.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class TransactionService {
@@ -157,5 +158,26 @@ export class TransactionService {
         amount: transaction.amount,
       },
     });
+  }
+
+  async getAnalytics() {
+    const categoriesWithAmount = await this.databaseService
+      .$queryRaw(Prisma.sql`
+    SELECT 
+  c.name as name,
+  SUM(tc.amount) as value
+FROM 
+  "TransactionCategory" tc
+JOIN 
+  "Category" c ON tc."categoryId" = c.id
+JOIN 
+  "Transaction" t ON tc."transactionId" = t.id
+WHERE t."createdAt" >= date_trunc('month', current_date)
+GROUP BY 
+  c.name
+ORDER BY 
+  value DESC;
+        `);
+    return categoriesWithAmount;
   }
 }
