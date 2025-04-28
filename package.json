@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "dev": "concurrently -n 'backend,frontend,types' -c 'blue.bold,green.bold,yellow.bold' \"npm run start:dev --prefix backend\" \"npm run dev --prefix frontend\" \"npm run dev --prefix types\""
+    "dev": "concurrently -n 'backend,frontend,types' -c 'blue.bold,green.bold,yellow.bold' \"npm run start:dev --prefix backend\" \"npm run dev --prefix frontend\" \"npm run dev --prefix types\"",
+    "build:docker": "docker build -t mynance-backend .",
+    "start:docker": "docker run -p 3000:3000 mynance-backend"
   },
   "author": "",
   "license": "ISC",

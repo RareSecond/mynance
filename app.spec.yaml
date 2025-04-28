@@ -1,0 +1,34 @@
+name: mynance-backend
+services:
+  - name: backend
+    dockerfile_path: Dockerfile
+    source_dir: .
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: RareSecond/mynance
+    http_port: 3000
+    routes:
+      - path: /
+    envs:
+      - key: GOOGLE_CLIENT_ID
+        type: SECRET
+        value: ${do.secrets.GOOGLE_CLIENT_ID}
+      - key: GOOGLE_CLIENT_SECRET
+        type: SECRET
+        value: ${do.secrets.GOOGLE_CLIENT_SECRET}
+      - key: JWT_SECRET
+        type: SECRET
+        value: ${do.secrets.JWT_SECRET}
+      - key: DATABASE_URL
+        type: SECRET
+        value: ${do.secrets.DATABASE_URL}
+      - key: GOCARDLESS_SECRET_ID
+        type: SECRET
+        value: ${do.secrets.GOCARDLESS_SECRET_ID}
+      - key: GOCARDLESS_SECRET_KEY
+        type: SECRET
+        value: ${do.secrets.GOCARDLESS_SECRET_KEY}
+      - key: FRONTEND_URL
+        type: GENERAL
+        value: ${do.env.FRONTEND_URL}
