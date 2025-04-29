@@ -14,6 +14,7 @@ export class CategoryService {
 
     return this.databaseService.category.findMany({
       where: { userId: user.id },
+      orderBy: { name: 'asc' },
     });
   }
 
