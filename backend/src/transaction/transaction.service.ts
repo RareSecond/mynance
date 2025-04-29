@@ -1,7 +1,7 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { GoCardlessService } from '@/common/services/gocardless.service';
 import { match, P } from 'ts-pattern';
-import { parse } from 'date-fns';
+import { addMonths, parse } from 'date-fns';
 import { DatabaseService } from '@/database/database.service';
 import { AccountService } from '@/account/account.service';
 import { Prisma } from '@prisma/client';
@@ -160,8 +160,11 @@ export class TransactionService {
     });
   }
 
-  async getAnalytics(type: 'expenses' | 'income' | 'combined') {
-    console.log(type);
+  async getAnalytics(
+    type: 'expenses' | 'income' | 'combined',
+    startDate: Date,
+  ) {
+    const endDate = addMonths(startDate, 1);
     const where = match(type)
       .with('expenses', () => Prisma.sql`t."amount" < 0`)
       .with('income', () => Prisma.sql`t."amount" > 0`)
@@ -183,7 +186,7 @@ JOIN
   "Category" c ON tc."categoryId" = c.id
 JOIN 
   "Transaction" t ON tc."transactionId" = t.id
-WHERE t."createdAt" >= date_trunc('month', current_date) AND ${where}
+WHERE t."createdAt" >= ${startDate} AND t."createdAt" < ${endDate} AND ${where}
 GROUP BY 
   c.name
 ORDER BY 

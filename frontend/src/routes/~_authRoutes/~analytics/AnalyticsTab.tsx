@@ -5,15 +5,18 @@ import { match, P } from "ts-pattern";
 
 export function AnalyticsTab({
   type,
+  startDate,
 }: {
   type: "expenses" | "income" | "combined";
+  startDate: Date;
 }) {
   const { data: analytics } = useQuery({
-    queryKey: ["analytics", type],
+    queryKey: ["analytics", type, startDate],
     queryFn: async () => {
       const res = await api.get("/transaction/analytics", {
         params: {
           type,
+          startDate,
         },
       });
       return res.data;
