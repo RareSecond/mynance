@@ -172,11 +172,11 @@ JOIN
   "Category" c ON tc."categoryId" = c.id
 JOIN 
   "Transaction" t ON tc."transactionId" = t.id
-WHERE t."createdAt" >= date_trunc('month', current_date)
+WHERE t."createdAt" >= date_trunc('month', current_date) AND t."amount" < 0
 GROUP BY 
   c.name
 ORDER BY 
-  value DESC;
+  value ASC;
         `);
     return categoriesWithAmount;
   }
