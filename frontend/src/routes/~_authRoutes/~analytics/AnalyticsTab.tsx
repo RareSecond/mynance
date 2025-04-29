@@ -1,12 +1,22 @@
 import { Text } from "@mantine/core";
+import { match, P } from "ts-pattern";
 
 export function AnalyticsTab({ analytics }: { analytics: any }) {
-  const total = analytics.reduce((acc, item) => acc + item.value, 0);
+  const totalExpenses = analytics
+    .filter((item) => item.value < 0)
+    .reduce((acc, item) => acc + item.value, 0);
+  const totalIncome = analytics
+    .filter((item) => item.value > 0)
+    .reduce((acc, item) => acc + item.value, 0);
 
   return (
     <div className="flex flex-col gap-2">
       {analytics.map((item) => {
-        const percentage = ((item.value / total) * 100).toFixed(1);
+        const percentage = match(item.value as number)
+          .with(P.number.lte(0), () =>
+            ((item.value / totalExpenses) * 100).toFixed(1)
+          )
+          .otherwise(() => ((item.value / totalIncome) * 100).toFixed(1));
         return (
           <div key={item.name}>
             <div className="flex items-center gap-2">

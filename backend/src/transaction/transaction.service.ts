@@ -161,6 +161,7 @@ export class TransactionService {
   }
 
   async getAnalytics(type: 'expenses' | 'income' | 'combined') {
+    console.log(type);
     const where = match(type)
       .with('expenses', () => Prisma.sql`t."amount" < 0`)
       .with('income', () => Prisma.sql`t."amount" > 0`)
