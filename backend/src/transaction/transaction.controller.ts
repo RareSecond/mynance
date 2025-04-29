@@ -15,8 +15,8 @@ export class TransactionController {
   }
 
   @Get('analytics')
-  async getAnalytics() {
-    return this.transactionService.getAnalytics();
+  async getAnalytics(@Query('type') type: 'expenses' | 'income' | 'combined') {
+    return this.transactionService.getAnalytics(type);
   }
 
   @Post('import')

@@ -1,15 +1,15 @@
 import { api } from "@/data/api";
+import { Loader } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { AnalyticsTab } from "./AnalyticsTab";
-import { Loader } from "@mantine/core";
 
-export function Expenses() {
+export function Income() {
   const { data: analytics } = useQuery({
-    queryKey: ["analyticsExpenses"],
+    queryKey: ["analyticsIncome"],
     queryFn: async () => {
       const res = await api.get("/transaction/analytics", {
         params: {
-          type: "expenses",
+          type: "income",
         },
       });
       return res.data;

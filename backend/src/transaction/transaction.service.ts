@@ -160,7 +160,17 @@ export class TransactionService {
     });
   }
 
-  async getAnalytics() {
+  async getAnalytics(type: 'expenses' | 'income' | 'combined') {
+    const where = match(type)
+      .with('expenses', () => Prisma.sql`t."amount" < 0`)
+      .with('income', () => Prisma.sql`t."amount" > 0`)
+      .with('combined', () => Prisma.sql`true`)
+      .exhaustive();
+    const orderBy = match(type)
+      .with('expenses', () => Prisma.sql`value ASC`)
+      .with('income', () => Prisma.sql`value DESC`)
+      .with('combined', () => Prisma.sql`value DESC`)
+      .exhaustive();
     const categoriesWithAmount = await this.databaseService
       .$queryRaw(Prisma.sql`
     SELECT 
@@ -172,11 +182,11 @@ JOIN
   "Category" c ON tc."categoryId" = c.id
 JOIN 
   "Transaction" t ON tc."transactionId" = t.id
-WHERE t."createdAt" >= date_trunc('month', current_date) AND t."amount" < 0
+WHERE t."createdAt" >= date_trunc('month', current_date) AND ${where}
 GROUP BY 
   c.name
 ORDER BY 
-  value ASC;
+  ${orderBy}
         `);
     return categoriesWithAmount;
   }

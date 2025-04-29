@@ -11,13 +11,27 @@ export function AnalyticsTab({ analytics }: { analytics: any }) {
           <div key={item.name}>
             <div className="flex items-center gap-2">
               <Text className="text-lg font-bold flex-grow">{item.name}</Text>
-              <Text className="text-status-danger font-bold">
+              <Text
+                className="font-bold"
+                style={{
+                  color:
+                    item.value < 0
+                      ? "var(--color-status-danger)"
+                      : "var(--color-status-success)",
+                }}
+              >
                 {item.value.toFixed(2)} EUR
               </Text>
             </div>
             <div
               className="relative bg-status-danger rounded-md h-5"
-              style={{ width: `${percentage}%` }}
+              style={{
+                width: `${percentage}%`,
+                backgroundColor:
+                  item.value < 0
+                    ? "var(--color-status-danger)"
+                    : "var(--color-status-success)",
+              }}
             >
               <Text className="absolute left-1 top-1/2 -translate-y-1/2 text-xs">
                 {percentage}%
