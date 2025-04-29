@@ -1,7 +1,27 @@
-import { Text } from "@mantine/core";
+import { api } from "@/data/api";
+import { Loader, Text } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
 import { match, P } from "ts-pattern";
 
-export function AnalyticsTab({ analytics }: { analytics: any }) {
+export function AnalyticsTab({
+  type,
+}: {
+  type: "expenses" | "income" | "combined";
+}) {
+  const { data: analytics } = useQuery({
+    queryKey: ["analytics", type],
+    queryFn: async () => {
+      const res = await api.get("/transaction/analytics", {
+        params: {
+          type,
+        },
+      });
+      return res.data;
+    },
+  });
+
+  if (!analytics) return <Loader />;
+
   const totalExpenses = analytics
     .filter((item) => item.value < 0)
     .reduce((acc, item) => acc + item.value, 0);
@@ -43,7 +63,7 @@ export function AnalyticsTab({ analytics }: { analytics: any }) {
                     : "var(--color-status-success)",
               }}
             >
-              <Text className="absolute left-1 top-1/2 -translate-y-1/2 text-xs">
+              <Text className="absolute left-1 top-1/2 -translate-y-1/2 text-xs text-shadow-md font-bold">
                 {percentage}%
               </Text>
             </div>

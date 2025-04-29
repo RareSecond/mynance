@@ -14,7 +14,7 @@
     "@mantine/core": "^7.15.3",
     "@mantine/hooks": "^7.15.3",
     "@mynance/types": "^0.0.0",
-    "@tailwindcss/vite": "^4.0.6",
+    "@tailwindcss/vite": "^4.1.4",
     "@tanstack/react-query": "^5.62.11",
     "@tanstack/react-router": "^1.105.0",
     "axios": "^1.7.9",
@@ -39,7 +39,7 @@
     "postcss": "^8.5.2",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
-    "tailwindcss": "^4.0.6",
+    "tailwindcss": "^4.1.4",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5"

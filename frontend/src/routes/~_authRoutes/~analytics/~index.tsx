@@ -1,9 +1,7 @@
 import { PageTitle } from "@/components/PageTitle";
 import { createFileRoute } from "@tanstack/react-router";
 import { Tabs } from "@mantine/core";
-import { Expenses } from "./Expenses";
-import { Income } from "./Income";
-import { Combined } from "./Combined";
+import { AnalyticsTab } from "./AnalyticsTab";
 
 export const Route = createFileRoute("/_authRoutes/analytics/")({
   component: RouteComponent,
@@ -35,13 +33,13 @@ function RouteComponent() {
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="expenses">
-          <Expenses />
+          <AnalyticsTab type="expenses" />
         </Tabs.Panel>
         <Tabs.Panel value="income">
-          <Income />
+          <AnalyticsTab type="income" />
         </Tabs.Panel>
         <Tabs.Panel value="combined">
-          <Combined />
+          <AnalyticsTab type="combined" />
         </Tabs.Panel>
       </Tabs>
     </>
