@@ -20,7 +20,11 @@ export class AccountService {
 
     return this.databaseService.account.findMany({
       where: {
-        userId: user.id,
+        users: {
+          some: {
+            id: user.id,
+          },
+        },
       },
       take: 100,
       orderBy: {
@@ -60,7 +64,7 @@ export class AccountService {
                 externalId: externalRequisitionId,
               },
             },
-            user: {
+            users: {
               connect: {
                 id: user.id,
               },
