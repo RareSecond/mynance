@@ -22,4 +22,12 @@ export class AccountController {
   ) {
     return this.accountService.createAccounts(externalRequisitionId, accounts);
   }
+
+  @Post(':accountId/link-user')
+  async linkUserToAccount(
+    @Param('accountId') accountId: string,
+    @Body('userId') userId: string,
+  ) {
+    return this.accountService.linkUserToAccount(accountId, userId);
+  }
 }

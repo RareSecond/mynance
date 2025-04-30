@@ -114,4 +114,17 @@ export class AccountService {
 
     return account;
   }
+
+  async linkUserToAccount(accountId: string, userId: string) {
+    await this.databaseService.account.update({
+      where: {
+        id: accountId,
+      },
+      data: {
+        users: {
+          connect: { id: userId },
+        },
+      },
+    });
+  }
 }

@@ -36,11 +36,9 @@ const theme = createTheme({
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
-      <ModalsProvider>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      </ModalsProvider>
+      <QueryClientProvider client={queryClient}>
+        <ModalsProvider>{children}</ModalsProvider>
+      </QueryClientProvider>
     </MantineProvider>
   );
 };

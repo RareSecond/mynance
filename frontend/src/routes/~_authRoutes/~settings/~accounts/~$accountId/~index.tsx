@@ -1,10 +1,12 @@
 import { PageTitle } from "@/components/PageTitle";
 import { api } from "@/data/api";
 import { Button, Card, Skeleton, Text } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { User } from "lucide-react";
 import { match, P } from "ts-pattern";
+import { LinkUserModal } from "./LinkUserModal";
 
 export const Route = createFileRoute(
   "/_authRoutes/settings/accounts/$accountId/"
@@ -42,7 +44,21 @@ function RouteComponent() {
                   </div>
                 ))}
               </div>
-              <Button variant="light" color="primary" size="sm">
+              <Button
+                variant="light"
+                color="primary"
+                size="sm"
+                onClick={() => {
+                  modals.open({
+                    title: "Add user to account",
+                    classNames: {
+                      body: "bg-dark-card",
+                      header: "bg-dark-card",
+                    },
+                    children: <LinkUserModal accountId={accountId} />,
+                  });
+                }}
+              >
                 Add user
               </Button>
             </>
