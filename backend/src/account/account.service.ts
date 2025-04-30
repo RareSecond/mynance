@@ -90,4 +90,28 @@ export class AccountService {
 
     return account.externalId;
   }
+
+  async getAccount(accountId: string) {
+    const account = await this.databaseService.account.findUnique({
+      where: {
+        id: accountId,
+      },
+      select: {
+        iban: true,
+        name: true,
+        users: {
+          select: {
+            id: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!account) {
+      throw new NotFoundException('Account not found');
+    }
+
+    return account;
+  }
 }

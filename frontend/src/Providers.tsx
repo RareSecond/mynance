@@ -1,4 +1,5 @@
 import { createTheme, MantineProvider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -35,7 +36,11 @@ const theme = createTheme({
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <ModalsProvider>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </ModalsProvider>
     </MantineProvider>
   );
 };

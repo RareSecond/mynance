@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { api } from "../../../../data/api";
 import { Button, Card, Skeleton, Text } from "@mantine/core";
 import { PageTitle } from "@/components/PageTitle";
 import { match, P } from "ts-pattern";
-import { CreditCard, RefreshCw } from "lucide-react";
+import { CreditCard, RefreshCw, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/_authRoutes/settings/accounts/")({
   component: RouteComponent,
@@ -50,16 +50,32 @@ function RouteComponent() {
                     {account.name}
                   </Text>
                 </Card.Section>
-                <Card.Section inheritPadding withBorder className="py-4">
+                <Card.Section
+                  inheritPadding
+                  withBorder
+                  className="py-4 flex justify-between"
+                >
                   <Button
-                    size="xs"
-                    variant="light"
+                    size="sm"
                     leftSection={<RefreshCw size={12} />}
                     color="primary"
                     onClick={() => importTransactions(account.id)}
                   >
                     Fetch transactions
                   </Button>
+                  <Link
+                    to="/settings/accounts/$accountId"
+                    params={{ accountId: account.id }}
+                  >
+                    <Button
+                      size="sm"
+                      variant="light"
+                      color="primary"
+                      leftSection={<Settings size={12} />}
+                    >
+                      Settings
+                    </Button>
+                  </Link>
                 </Card.Section>
               </Card>
             ));

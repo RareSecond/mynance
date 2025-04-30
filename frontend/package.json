@@ -10,9 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mantine/charts": "^7.17.4",
-    "@mantine/core": "^7.15.3",
-    "@mantine/hooks": "^7.15.3",
+    "@mantine/charts": "^7.17.5",
+    "@mantine/core": "^7.17.5",
+    "@mantine/hooks": "^7.17.5",
+    "@mantine/modals": "^7.17.5",
     "@mynance/types": "^0.0.0",
     "@tailwindcss/vite": "^4.1.4",
     "@tanstack/react-query": "^5.62.11",
