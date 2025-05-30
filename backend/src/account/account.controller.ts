@@ -2,6 +2,10 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { ApiResponse } from '@nestjs/swagger';
 import { Account } from './account.dto';
+import {
+  CreateAccountsDto,
+  AccountResponseDto,
+} from './dto/create-accounts.dto';
 
 @Controller('account')
 export class AccountController {
@@ -24,10 +28,12 @@ export class AccountController {
 
   @Post()
   async createAccounts(
-    @Body('externalRequisitionId') externalRequisitionId: string,
-    @Body('accounts') accounts: string[],
-  ) {
-    return this.accountService.createAccounts(externalRequisitionId, accounts);
+    @Body() createAccountsDto: CreateAccountsDto,
+  ): Promise<AccountResponseDto[]> {
+    return this.accountService.createAccounts(
+      createAccountsDto.externalRequisitionId,
+      createAccountsDto.accounts,
+    );
   }
 
   @Post(':accountId/link-user')

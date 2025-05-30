@@ -99,7 +99,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object"
+                    "$ref": "#/components/schemas/GetBanksResponseDto"
                   }
                 }
               }
@@ -112,25 +112,26 @@
       }
     },
     "/banks/link": {
-      "get": {
+      "post": {
         "operationId": "BanksController_createLink",
-        "parameters": [
-          {
-            "name": "bankId",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBankLinkDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/BankLinkResponseDto"
                 }
               }
             }
@@ -156,7 +157,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccountResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -190,9 +201,29 @@
       "post": {
         "operationId": "AccountController_createAccounts",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAccountsDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccountResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -468,6 +499,95 @@
           "updatedAt"
         ]
       },
+      "GetBanksResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "bic": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "bic",
+          "logo"
+        ]
+      },
+      "CreateBankLinkDto": {
+        "type": "object",
+        "properties": {
+          "bankId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "bankId"
+        ]
+      },
+      "BankLinkResponseDto": {
+        "type": "object",
+        "properties": {
+          "link": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "link"
+        ]
+      },
+      "AccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string"
+          },
+          "last_accessed": {
+            "type": "string"
+          },
+          "iban": {
+            "type": "string"
+          },
+          "bban": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "institution_id": {
+            "type": "string"
+          },
+          "owner_name": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "created",
+          "last_accessed",
+          "iban",
+          "bban",
+          "status",
+          "institution_id",
+          "owner_name",
+          "name"
+        ]
+      },
       "Account": {
         "type": "object",
         "properties": {
@@ -485,6 +605,25 @@
           "id",
           "name",
           "iban"
+        ]
+      },
+      "CreateAccountsDto": {
+        "type": "object",
+        "properties": {
+          "externalRequisitionId": {
+            "type": "string"
+          },
+          "accounts": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "externalRequisitionId",
+          "accounts"
         ]
       },
       "CategoryDto": {

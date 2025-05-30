@@ -1,25 +1,23 @@
 import { Loader } from "@mantine/core";
-import { api } from "../../../../data/api";
-import { useQuery } from "@tanstack/react-query";
+import { useBanksControllerCreateLink } from "@/data/api";
+import { useEffect } from "react";
 
 export function StartLinkingProcess({ bankId }: { bankId: string }) {
-  const { data: link } = useQuery({
-    queryKey: ["banks", bankId],
-    queryFn: async () => {
-      const { data } = await api.get("/banks/link", {
-        params: {
-          bankId,
-        },
-      });
-      return data;
+  const { mutate: createLink } = useBanksControllerCreateLink({
+    mutation: {
+      onSuccess: (data) => {
+        window.location.href = data.link;
+      },
     },
   });
 
-  if (!link) {
-    return <Loader />;
-  } else {
-    window.location.href = link;
+  useEffect(() => {
+    createLink({
+      data: {
+        bankId,
+      },
+    });
+  }, [bankId, createLink]);
 
-    return null;
-  }
+  return <Loader />;
 }
