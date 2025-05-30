@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { ImportTransactionsDto } from './dto/import-transactions.dto';
+import { ListTransactionsQueryDto } from './dto/list-transactions-query.dto';
+import { TransactionResponseDto } from './dto/transaction-response.dto';
 
 @Controller('transaction')
 export class TransactionController {
@@ -8,10 +10,10 @@ export class TransactionController {
 
   @Get()
   async listTransactions(
-    @Query('uncategorizedOnly') uncategorizedOnly?: string,
-  ) {
+    @Query() query: ListTransactionsQueryDto,
+  ): Promise<TransactionResponseDto[]> {
     return this.transactionService.listTransactions(
-      uncategorizedOnly === 'true',
+      query.uncategorizedOnly ?? false,
     );
   }
 
