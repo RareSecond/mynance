@@ -354,6 +354,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkCategoryDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -370,7 +380,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -380,9 +400,26 @@
       "post": {
         "operationId": "CategoryController_createCategory",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -458,11 +495,15 @@
           },
           "name": {
             "type": "string"
+          },
+          "userId": {
+            "type": "string"
           }
         },
         "required": [
           "id",
-          "name"
+          "name",
+          "userId"
         ]
       },
       "TransactionCategoryDto": {
@@ -524,6 +565,28 @@
         },
         "required": [
           "accountId"
+        ]
+      },
+      "LinkCategoryDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "categoryId"
+        ]
+      },
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "category"
         ]
       }
     }

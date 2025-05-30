@@ -3,6 +3,7 @@ import { TransactionService } from './transaction.service';
 import { ImportTransactionsDto } from './dto/import-transactions.dto';
 import { ListTransactionsQueryDto } from './dto/list-transactions-query.dto';
 import { TransactionResponseDto } from './dto/transaction-response.dto';
+import { LinkCategoryDto } from './dto/link-category.dto';
 
 @Controller('transaction')
 export class TransactionController {
@@ -33,8 +34,11 @@ export class TransactionController {
   @Post(':transactionId/category')
   async linkCategory(
     @Param('transactionId') transactionId: string,
-    @Body('categoryId') categoryId: string,
+    @Body() linkCategoryDto: LinkCategoryDto,
   ) {
-    return this.transactionService.linkCategory(transactionId, categoryId);
+    return this.transactionService.linkCategory(
+      transactionId,
+      linkCategoryDto.categoryId,
+    );
   }
 }
