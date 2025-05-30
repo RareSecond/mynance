@@ -1,0 +1,399 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/google/login": {
+      "get": {
+        "operationId": "AuthController_googleAuth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/google/callback": {
+      "get": {
+        "operationId": "AuthController_googleAuthRedirect",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_getCurrentUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/user": {
+      "get": {
+        "operationId": "UserController_getUser",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/banks": {
+      "get": {
+        "operationId": "BanksController_getBanks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banks"
+        ]
+      }
+    },
+    "/banks/link": {
+      "get": {
+        "operationId": "BanksController_createLink",
+        "parameters": [
+          {
+            "name": "bankId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banks"
+        ]
+      }
+    },
+    "/requisition/{externalRequisitionId}/accounts": {
+      "get": {
+        "operationId": "RequisitionController_getAccounts",
+        "parameters": [
+          {
+            "name": "externalRequisitionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Requisition"
+        ]
+      }
+    },
+    "/account": {
+      "get": {
+        "operationId": "AccountController_listAccounts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Account"
+        ]
+      },
+      "post": {
+        "operationId": "AccountController_createAccounts",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Account"
+        ]
+      }
+    },
+    "/account/{accountId}": {
+      "get": {
+        "operationId": "AccountController_getAccount",
+        "parameters": [
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Account"
+        ]
+      }
+    },
+    "/account/{accountId}/link-user": {
+      "post": {
+        "operationId": "AccountController_linkUserToAccount",
+        "parameters": [
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Account"
+        ]
+      }
+    },
+    "/transaction": {
+      "get": {
+        "operationId": "TransactionController_listTransactions",
+        "parameters": [
+          {
+            "name": "uncategorizedOnly",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Transaction"
+        ]
+      }
+    },
+    "/transaction/analytics": {
+      "get": {
+        "operationId": "TransactionController_getAnalytics",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Transaction"
+        ]
+      }
+    },
+    "/transaction/import": {
+      "post": {
+        "operationId": "TransactionController_importTransactions",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Transaction"
+        ]
+      }
+    },
+    "/transaction/{transactionId}/category": {
+      "post": {
+        "operationId": "TransactionController_linkCategory",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Transaction"
+        ]
+      }
+    },
+    "/category": {
+      "get": {
+        "operationId": "CategoryController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Category"
+        ]
+      },
+      "post": {
+        "operationId": "CategoryController_createCategory",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Category"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Mynance API",
+    "description": "The Mynance API description",
+    "version": "0.0.1",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "mynance",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      }
+    }
+  }
+}
