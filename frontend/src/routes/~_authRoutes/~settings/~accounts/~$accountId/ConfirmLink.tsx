@@ -1,7 +1,11 @@
-import { api } from "@/data/api";
+import {
+  getAccountControllerGetAccountQueryKey,
+  useAccountControllerLinkUserToAccount,
+  useUserControllerGetUser,
+} from "@/data/api";
 import { Button, Loader, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function ConfirmLink({
   email,
@@ -11,30 +15,25 @@ export function ConfirmLink({
   accountId: string;
 }) {
   const queryClient = useQueryClient();
-  const { data: user, isLoading } = useQuery({
-    queryKey: ["user", email],
-    queryFn: async () => {
-      const { data } = await api.get("/user", {
-        params: {
-          email,
+  const { data: user, isLoading } = useUserControllerGetUser(
+    { email },
+    {
+      query: {
+        enabled: !!email,
+      },
+    }
+  );
+  const { mutate: linkUserToAccount, isPending: isLinking } =
+    useAccountControllerLinkUserToAccount({
+      mutation: {
+        onSuccess: async () => {
+          await queryClient.refetchQueries({
+            queryKey: getAccountControllerGetAccountQueryKey(accountId),
+          });
+          modals.closeAll();
         },
-      });
-      return data;
-    },
-  });
-  const { mutate: linkUserToAccount, isPending: isLinking } = useMutation({
-    mutationFn: async () => {
-      await api.post(`/account/${accountId}/link-user`, {
-        userId: user.id,
-      });
-    },
-    onSuccess: async () => {
-      await queryClient.refetchQueries({
-        queryKey: ["account", accountId],
-      });
-      modals.closeAll();
-    },
-  });
+      },
+    });
 
   if (isLoading) {
     return <Loader />;
@@ -60,7 +59,14 @@ export function ConfirmLink({
       <Button
         className="w-full"
         color="primary"
-        onClick={() => linkUserToAccount()}
+        onClick={() =>
+          linkUserToAccount({
+            accountId,
+            data: {
+              userId: user.id,
+            },
+          })
+        }
         loading={isLinking}
       >
         Link user

@@ -73,13 +73,21 @@
             "required": true,
             "in": "query",
             "schema": {
+              "format": "email",
               "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -181,13 +189,13 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "List of accounts",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Account"
+                    "$ref": "#/components/schemas/ListAccountsResponseDto"
                   }
                 }
               }
@@ -246,7 +254,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccountResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -267,6 +282,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkUserDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -499,6 +524,32 @@
           "updatedAt"
         ]
       },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "GetBanksResponseDto": {
         "type": "object",
         "properties": {
@@ -588,10 +639,13 @@
           "name"
         ]
       },
-      "Account": {
+      "ListAccountsResponseDto": {
         "type": "object",
         "properties": {
           "id": {
+            "type": "string"
+          },
+          "externalId": {
             "type": "string"
           },
           "name": {
@@ -599,12 +653,61 @@
           },
           "iban": {
             "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
           }
         },
         "required": [
           "id",
+          "externalId",
           "name",
-          "iban"
+          "iban",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AccountUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "id",
+          "email"
+        ]
+      },
+      "GetAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "iban": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountUserDto"
+            }
+          }
+        },
+        "required": [
+          "iban",
+          "name",
+          "users"
         ]
       },
       "CreateAccountsDto": {
@@ -624,6 +727,18 @@
         "required": [
           "externalRequisitionId",
           "accounts"
+        ]
+      },
+      "LinkUserDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "userId"
         ]
       },
       "CategoryDto": {
