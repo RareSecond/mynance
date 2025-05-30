@@ -305,7 +305,17 @@
     "/transaction": {
       "get": {
         "operationId": "TransactionController_listTransactions",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "uncategorizedOnly",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -321,6 +331,7 @@
             }
           }
         },
+        "summary": "List transactions",
         "tags": [
           "Transaction"
         ]
@@ -367,6 +378,7 @@
             }
           }
         },
+        "summary": "Get transaction analytics",
         "tags": [
           "Transaction"
         ]
@@ -391,6 +403,7 @@
             "description": ""
           }
         },
+        "summary": "Import transactions",
         "tags": [
           "Transaction"
         ]
@@ -424,6 +437,7 @@
             "description": ""
           }
         },
+        "summary": "Link a category to a transaction",
         "tags": [
           "Transaction"
         ]
