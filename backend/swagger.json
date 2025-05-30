@@ -305,16 +305,7 @@
     "/transaction": {
       "get": {
         "operationId": "TransactionController_listTransactions",
-        "parameters": [
-          {
-            "name": "uncategorizedOnly",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
@@ -344,7 +335,12 @@
             "required": true,
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "expenses",
+                "income",
+                "combined"
+              ]
             }
           },
           {
@@ -362,7 +358,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AnalyticsCategoryDto"
+                  }
                 }
               }
             }
@@ -808,6 +807,21 @@
           "counterPartyName",
           "createdAt",
           "categories"
+        ]
+      },
+      "AnalyticsCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "value"
         ]
       },
       "ImportTransactionsDto": {

@@ -4,6 +4,10 @@ import { ImportTransactionsDto } from './dto/import-transactions.dto';
 import { ListTransactionsQueryDto } from './dto/list-transactions-query.dto';
 import { TransactionResponseDto } from './dto/transaction-response.dto';
 import { LinkCategoryDto } from './dto/link-category.dto';
+import {
+  GetAnalyticsQueryDto,
+  AnalyticsCategoryDto,
+} from './dto/get-analytics.dto';
 
 @Controller('transaction')
 export class TransactionController {
@@ -11,19 +15,19 @@ export class TransactionController {
 
   @Get()
   async listTransactions(
-    @Query() query: ListTransactionsQueryDto,
+    @Query('uncategorizedOnly') uncategorizedOnly = false,
   ): Promise<TransactionResponseDto[]> {
-    return this.transactionService.listTransactions(
-      query.uncategorizedOnly ?? false,
-    );
+    return this.transactionService.listTransactions(uncategorizedOnly);
   }
 
   @Get('analytics')
   async getAnalytics(
-    @Query('type') type: 'expenses' | 'income' | 'combined',
-    @Query('startDate') startDate: string,
-  ) {
-    return this.transactionService.getAnalytics(type, new Date(startDate));
+    @Query() query: GetAnalyticsQueryDto,
+  ): Promise<AnalyticsCategoryDto[]> {
+    return this.transactionService.getAnalytics(
+      query.type,
+      new Date(query.startDate),
+    );
   }
 
   @Post('import')

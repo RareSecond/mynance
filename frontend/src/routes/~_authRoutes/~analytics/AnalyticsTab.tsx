@@ -1,6 +1,5 @@
-import { api } from "@/data/api";
+import { useTransactionControllerGetAnalytics } from "@/data/api";
 import { Loader, Text } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
 import { match, P } from "ts-pattern";
 
 export function AnalyticsTab({
@@ -10,17 +9,9 @@ export function AnalyticsTab({
   type: "expenses" | "income" | "combined";
   startDate: Date;
 }) {
-  const { data: analytics } = useQuery({
-    queryKey: ["analytics", type, startDate],
-    queryFn: async () => {
-      const res = await api.get("/transaction/analytics", {
-        params: {
-          type,
-          startDate,
-        },
-      });
-      return res.data;
-    },
+  const { data: analytics } = useTransactionControllerGetAnalytics({
+    type,
+    startDate: startDate.toISOString(),
   });
 
   if (!analytics) return <Loader />;
