@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
+import { ImportTransactionsDto } from './dto/import-transactions.dto';
 
 @Controller('transaction')
 export class TransactionController {
@@ -23,8 +24,8 @@ export class TransactionController {
   }
 
   @Post('import')
-  async importTransactions(@Body('accountId') accountId: string) {
-    return this.transactionService.importTransactions(accountId);
+  async importTransactions(@Body() importDto: ImportTransactionsDto) {
+    return this.transactionService.importTransactions(importDto.accountId);
   }
 
   @Post(':transactionId/category')

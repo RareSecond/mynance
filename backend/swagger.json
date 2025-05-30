@@ -304,6 +304,16 @@
       "post": {
         "operationId": "TransactionController_importTransactions",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportTransactionsDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -387,11 +397,26 @@
           },
           "name": {
             "type": "string"
+          },
+          "iban": {
+            "type": "string"
           }
         },
         "required": [
           "id",
-          "name"
+          "name",
+          "iban"
+        ]
+      },
+      "ImportTransactionsDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "accountId"
         ]
       }
     }
