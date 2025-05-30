@@ -3,12 +3,13 @@ import { useDisclosure } from "@mantine/hooks";
 import { Calendar, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import { Category } from "./Category";
+import { TransactionResponseDto } from "@/data/api";
 
 export function Transaction({
   transaction,
   defaultOpen = false,
 }: {
-  transaction: any;
+  transaction: TransactionResponseDto;
   defaultOpen?: boolean;
 }) {
   const [opened, handlers] = useDisclosure(defaultOpen);

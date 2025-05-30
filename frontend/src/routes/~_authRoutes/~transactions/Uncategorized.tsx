@@ -3,20 +3,11 @@ import { P } from "ts-pattern";
 import { Skeleton } from "@mantine/core";
 import { match } from "ts-pattern";
 import { Transaction } from "./Transaction";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/data/api";
+import { useTransactionControllerListTransactions } from "@/data/api";
 
 export function Uncategorized() {
-  const { data: transactions } = useQuery({
-    queryKey: ["uncategorizedTransactions"],
-    queryFn: async () => {
-      const response = await api.get("/transaction", {
-        params: {
-          uncategorizedOnly: true,
-        },
-      });
-      return response.data;
-    },
+  const { data: transactions } = useTransactionControllerListTransactions({
+    uncategorizedOnly: true,
   });
 
   return (
