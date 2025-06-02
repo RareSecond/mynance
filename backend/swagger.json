@@ -566,6 +566,10 @@
       "GetBanksResponseDto": {
         "type": "object",
         "properties": {
+          "logo": {
+            "type": "string",
+            "format": "uri"
+          },
           "id": {
             "type": "string"
           },
@@ -574,17 +578,13 @@
           },
           "bic": {
             "type": "string"
-          },
-          "logo": {
-            "type": "string",
-            "format": "uri"
           }
         },
         "required": [
+          "logo",
           "id",
           "name",
-          "bic",
-          "logo"
+          "bic"
         ]
       },
       "CreateBankLinkDto": {
@@ -688,17 +688,17 @@
       "AccountUserDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
           "email": {
             "type": "string",
             "format": "email"
+          },
+          "id": {
+            "type": "string"
           }
         },
         "required": [
-          "id",
-          "email"
+          "email",
+          "id"
         ]
       },
       "GetAccountResponseDto": {

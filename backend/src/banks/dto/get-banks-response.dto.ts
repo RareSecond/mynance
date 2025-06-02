@@ -1,19 +1,11 @@
-import { IsString, IsNotEmpty, IsUrl } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class GetBanksResponseDto {
-  @IsString()
-  @IsNotEmpty()
   id: string;
-
-  @IsString()
-  @IsNotEmpty()
   name: string;
-
-  @IsString()
-  @IsNotEmpty()
   bic: string;
-
-  @IsString()
-  @IsUrl()
+  @ApiProperty({
+    format: 'uri',
+  })
   logo: string;
 }

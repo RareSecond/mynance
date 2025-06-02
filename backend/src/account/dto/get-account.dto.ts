@@ -1,25 +1,15 @@
-import { IsString, IsNotEmpty, IsEmail, IsArray } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class AccountUserDto {
-  @IsString()
-  @IsNotEmpty()
   id: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @IsEmail()
+  @ApiProperty({
+    format: 'email',
+  })
   email: string;
 }
 
 export class GetAccountResponseDto {
-  @IsString()
-  @IsNotEmpty()
   iban: string;
-
-  @IsString()
-  @IsNotEmpty()
   name: string;
-
-  @IsArray()
   users: AccountUserDto[];
 }

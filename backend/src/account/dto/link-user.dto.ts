@@ -1,8 +1,8 @@
-import { IsString, IsNotEmpty, IsUUID } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class LinkUserDto {
-  @IsString()
-  @IsNotEmpty()
-  @IsUUID()
+  @ApiProperty({
+    format: 'uuid',
+  })
   userId: string;
 }
