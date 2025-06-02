@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 src/data/api.ts
+
+# TypeScript incremental build info
+*.tsbuildinfo
