@@ -515,10 +515,11 @@
       "CurrentUserDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
           "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "id": {
             "type": "string"
           },
           "createdAt": {
@@ -531,8 +532,8 @@
           }
         },
         "required": [
-          "id",
           "email",
+          "id",
           "createdAt",
           "updatedAt"
         ]
@@ -540,12 +541,12 @@
       "UserResponseDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
           "email": {
             "type": "string",
             "format": "email"
+          },
+          "id": {
+            "type": "string"
           },
           "createdAt": {
             "format": "date-time",
@@ -557,8 +558,8 @@
           }
         },
         "required": [
-          "id",
           "email",
+          "id",
           "createdAt",
           "updatedAt"
         ]
@@ -726,20 +727,20 @@
       "CreateAccountsDto": {
         "type": "object",
         "properties": {
-          "externalRequisitionId": {
-            "type": "string"
-          },
           "accounts": {
             "minItems": 1,
             "type": "array",
             "items": {
               "type": "string"
             }
+          },
+          "externalRequisitionId": {
+            "type": "string"
           }
         },
         "required": [
-          "externalRequisitionId",
-          "accounts"
+          "accounts",
+          "externalRequisitionId"
         ]
       },
       "LinkUserDto": {
