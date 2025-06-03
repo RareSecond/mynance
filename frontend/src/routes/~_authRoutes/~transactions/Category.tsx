@@ -23,7 +23,11 @@ export function Category({
 }: {
   transaction: TransactionResponseDto;
 }) {
-  const { data: categories, refetch } = useCategoryControllerFindAll();
+  const { data: categories, refetch } = useCategoryControllerFindAll({
+    query: {
+      initialData: [],
+    },
+  });
   const queryClient = useQueryClient();
   const [opened, handlers] = useDisclosure(transaction.categories.length === 0);
   const combobox = useCombobox({
@@ -83,8 +87,6 @@ export function Category({
 
     combobox.closeDropdown();
   };
-
-  if (!categories) return null;
 
   const exactOptionMatch = categories.some(
     (category) => category.name === search
