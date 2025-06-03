@@ -34,6 +34,7 @@ model Account {
   requisition   Requisition   @relation(fields: [requisitionId], references: [id])
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  lastFetchedAt DateTime?
   transactions  Transaction[]
   users         User[]
   iban          String
@@ -42,7 +43,7 @@ model Account {
 
 model Transaction {
   id               String                @id @default(uuid())
-  externalId       String
+  externalId       String                @unique
   accountId        String
   account          Account               @relation(fields: [accountId], references: [id])
   createdAt        DateTime

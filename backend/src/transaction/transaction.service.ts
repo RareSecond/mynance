@@ -69,15 +69,17 @@ export class TransactionService {
   async importTransactions(accountId: string) {
     const externalAccountId =
       await this.accountService.getExternalAccountId(accountId);
-    console.log(externalAccountId);
-    const data =
-      await this.goCardlessService.listTransactions(externalAccountId);
-    const transactions = data.transactions.booked;
-    await this.databaseService.transaction.deleteMany({
-      where: {
-        accountId,
+    const { lastFetchedAt } = await this.accountService.findAccountWithFields(
+      accountId,
+      {
+        lastFetchedAt: true,
       },
-    });
+    );
+    const data = await this.goCardlessService.listTransactions(
+      externalAccountId,
+      lastFetchedAt,
+    );
+    const transactions = data.transactions.booked;
 
     await this.databaseService.transaction.createMany({
       data: transactions.map((transaction) => {
@@ -112,7 +114,10 @@ export class TransactionService {
           createdAt: this.extractDateFromId(transaction.transactionId),
         };
       }),
+      skipDuplicates: true,
     });
+
+    await this.accountService.updateLastFetchedAt(accountId);
   }
 
   private extractDateFromId(id: string) {
