@@ -221,17 +221,7 @@
         },
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AccountResponseDto"
-                  }
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -659,31 +649,17 @@
           "id": {
             "type": "string"
           },
-          "externalId": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
           },
           "iban": {
             "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
           }
         },
         "required": [
           "id",
-          "externalId",
           "name",
-          "iban",
-          "createdAt",
-          "updatedAt"
+          "iban"
         ]
       },
       "AccountUserDto": {

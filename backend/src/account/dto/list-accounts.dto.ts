@@ -1,8 +1,12 @@
+import { Expose } from 'class-transformer';
+
 export class ListAccountsResponseDto {
+  @Expose()
   id: string;
-  externalId: string;
+
+  @Expose()
   name: string;
+
+  @Expose()
   iban: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
