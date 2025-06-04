@@ -9,22 +9,24 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { match } from "ts-pattern";
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import {
-  getTransactionControllerListTransactionsQueryKey,
   TransactionResponseDto,
   useCategoryControllerCreateCategory,
   useCategoryControllerFindAll,
-  useTransactionControllerLinkCategory,
 } from "@/data/api";
 
 export function Category({
   transaction,
+  onCategoryChange,
 }: {
   transaction: TransactionResponseDto;
+  onCategoryChange: (categoryId: string) => void;
 }) {
-  const { data: categories, refetch } = useCategoryControllerFindAll();
-  const queryClient = useQueryClient();
+  const { data: categories, refetch } = useCategoryControllerFindAll({
+    query: {
+      initialData: [],
+    },
+  });
   const [opened, handlers] = useDisclosure(transaction.categories.length === 0);
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -40,30 +42,8 @@ export function Category({
       mutation: {
         onSuccess: (data) => {
           refetch();
-          linkCategory({
-            transactionId: transaction.id,
-            data: {
-              categoryId: data.id,
-            },
-          });
-        },
-      },
-    });
-
-  const { mutate: linkCategory, isPending: isLinkingCategory } =
-    useTransactionControllerLinkCategory({
-      mutation: {
-        onSuccess: async () => {
-          await Promise.all([
-            queryClient.refetchQueries({
-              queryKey: getTransactionControllerListTransactionsQueryKey(),
-            }),
-            queryClient.refetchQueries({
-              queryKey: getTransactionControllerListTransactionsQueryKey({
-                uncategorizedOnly: true,
-              }),
-            }),
-          ]);
+          setValue(search);
+          onCategoryChange(data.id);
         },
       },
     });
@@ -73,18 +53,10 @@ export function Category({
       createCategory({ data: { category: search } });
     } else {
       setValue(optionProps.children as string);
-      linkCategory({
-        transactionId: transaction.id,
-        data: {
-          categoryId: val,
-        },
-      });
+      onCategoryChange(val);
     }
-
     combobox.closeDropdown();
   };
-
-  if (!categories) return null;
 
   const exactOptionMatch = categories.some(
     (category) => category.name === search
@@ -135,7 +107,7 @@ export function Category({
                 placeholder="Pick a category"
                 rightSectionPointerEvents="none"
                 size="xs"
-                disabled={isLinkingCategory || isCreatingCategory}
+                disabled={isCreatingCategory}
                 classNames={{
                   input: "bg-dark-secondary text-text-muted border-none",
                 }}

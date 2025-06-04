@@ -6,6 +6,7 @@ import {
 import { GoCardlessService } from '@/common/services/gocardless.service';
 import { DatabaseService } from '@/database/database.service';
 import { CurrentUserService } from '@/auth/current-user.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AccountService {
@@ -92,20 +93,27 @@ export class AccountService {
   }
 
   async getAccount(accountId: string) {
+    return this.findAccountWithFields(accountId, {
+      iban: true,
+      name: true,
+      users: {
+        select: {
+          id: true,
+          email: true,
+        },
+      },
+    });
+  }
+
+  async findAccountWithFields<T extends Prisma.AccountSelect>(
+    accountId: string,
+    select: T,
+  ) {
     const account = await this.databaseService.account.findUnique({
       where: {
         id: accountId,
       },
-      select: {
-        iban: true,
-        name: true,
-        users: {
-          select: {
-            id: true,
-            email: true,
-          },
-        },
-      },
+      select,
     });
 
     if (!account) {
@@ -125,6 +133,13 @@ export class AccountService {
           connect: { id: userId },
         },
       },
+    });
+  }
+
+  async updateLastFetchedAt(accountId: string) {
+    await this.databaseService.account.update({
+      where: { id: accountId },
+      data: { lastFetchedAt: new Date() },
     });
   }
 }

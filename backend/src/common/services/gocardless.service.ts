@@ -1,6 +1,7 @@
 import { GetBanksResponse } from '@mynance/types';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 @Injectable()
 export class GoCardlessService {
@@ -93,8 +94,13 @@ export class GoCardlessService {
     return res.data;
   }
 
-  async listTransactions(externalAccountId: string) {
+  async listTransactions(externalAccountId: string, dateFrom?: Date) {
     try {
+      const queryParams = new URLSearchParams();
+      if (dateFrom) {
+        queryParams.set('date_from', format(dateFrom, 'yyyy-MM-dd'));
+      }
+
       const res = await this.axiosInstance.get<{
         id: string;
         status: string;
@@ -105,6 +111,9 @@ export class GoCardlessService {
         };
       }>(
         `https://bankaccountdata.gocardless.com/api/v2/accounts/${externalAccountId}/transactions/`,
+        {
+          params: queryParams,
+        },
       );
       return res.data;
     } catch (error) {

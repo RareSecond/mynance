@@ -1,9 +1,17 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { TransactionResponseDto } from './dto/transaction-response.dto';
-import { LinkCategoryDto } from './dto/link-category.dto';
 import { ListTransactionsQueryDto } from './dto/list-transactions-query.dto';
 import { ImportTransactionsDto } from './dto/import-transactions.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import {
   GetAnalyticsQueryDto,
   AnalyticsCategoryDto,
@@ -39,15 +47,15 @@ export class TransactionController {
     return this.transactionService.importTransactions(importDto.accountId);
   }
 
-  @Post(':transactionId/category')
-  @ApiOperation({ summary: 'Link a category to a transaction' })
-  async linkCategory(
+  @Patch(':transactionId')
+  @ApiOperation({ summary: 'Update a transaction' })
+  async updateTransaction(
     @Param('transactionId') transactionId: string,
-    @Body() linkCategoryDto: LinkCategoryDto,
-  ) {
-    return this.transactionService.linkCategory(
+    @Body() updateTransactionDto: UpdateTransactionDto,
+  ): Promise<void> {
+    await this.transactionService.updateTransaction(
       transactionId,
-      linkCategoryDto.categoryId,
+      updateTransactionDto,
     );
   }
 }

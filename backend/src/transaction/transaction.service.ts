@@ -40,6 +40,7 @@ export class TransactionService {
         description: true,
         counterPartyName: true,
         createdAt: true,
+        note: true,
         categories: {
           select: {
             category: {
@@ -69,15 +70,17 @@ export class TransactionService {
   async importTransactions(accountId: string) {
     const externalAccountId =
       await this.accountService.getExternalAccountId(accountId);
-    console.log(externalAccountId);
-    const data =
-      await this.goCardlessService.listTransactions(externalAccountId);
-    const transactions = data.transactions.booked;
-    await this.databaseService.transaction.deleteMany({
-      where: {
-        accountId,
+    const { lastFetchedAt } = await this.accountService.findAccountWithFields(
+      accountId,
+      {
+        lastFetchedAt: true,
       },
-    });
+    );
+    const data = await this.goCardlessService.listTransactions(
+      externalAccountId,
+      lastFetchedAt,
+    );
+    const transactions = data.transactions.booked;
 
     await this.databaseService.transaction.createMany({
       data: transactions.map((transaction) => {
@@ -112,7 +115,10 @@ export class TransactionService {
           createdAt: this.extractDateFromId(transaction.transactionId),
         };
       }),
+      skipDuplicates: true,
     });
+
+    await this.accountService.updateLastFetchedAt(accountId);
   }
 
   private extractDateFromId(id: string) {
@@ -142,21 +148,40 @@ export class TransactionService {
     return 'Unknown';
   }
 
-  async linkCategory(transactionId: string, categoryId: string) {
-    const transaction = await this.get(transactionId);
+  async updateTransaction(
+    transactionId: string,
+    updateDto: { note?: string; categoryId?: string },
+  ) {
+    await this.databaseService.$transaction(async (tx) => {
+      if (updateDto.categoryId) {
+        // Delete existing categories
+        await tx.transactionCategory.deleteMany({
+          where: {
+            transactionId,
+          },
+        });
 
-    await this.databaseService.transactionCategory.deleteMany({
-      where: {
-        transactionId,
-      },
-    });
+        // Create new category link
+        await tx.transactionCategory.create({
+          data: {
+            transactionId,
+            categoryId: updateDto.categoryId,
+            amount: (
+              await tx.transaction.findUnique({
+                where: { id: transactionId },
+                select: { amount: true },
+              })
+            ).amount,
+          },
+        });
+      }
 
-    await this.databaseService.transactionCategory.create({
-      data: {
-        transactionId,
-        categoryId,
-        amount: transaction.amount,
-      },
+      if (updateDto.note !== undefined) {
+        await tx.transaction.update({
+          where: { id: transactionId },
+          data: { note: updateDto.note },
+        });
+      }
     });
   }
 
