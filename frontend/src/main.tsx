@@ -6,6 +6,7 @@ import "./index.css";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { Providers } from "./Providers";
+import axios from "axios";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -16,6 +17,9 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:3000";
 
 // Render the app
 const rootElement = document.getElementById("root")!;

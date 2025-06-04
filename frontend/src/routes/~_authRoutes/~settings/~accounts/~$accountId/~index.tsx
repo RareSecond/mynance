@@ -1,12 +1,11 @@
 import { PageTitle } from "@/components/PageTitle";
-import { api } from "@/data/api";
 import { Button, Card, Skeleton, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { User } from "lucide-react";
 import { match, P } from "ts-pattern";
 import { LinkUserModal } from "./LinkUserModal";
+import { useAccountControllerGetAccount } from "@/data/api";
 
 export const Route = createFileRoute(
   "/_authRoutes/settings/accounts/$accountId/"
@@ -16,13 +15,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { accountId } = Route.useParams();
-  const { data: account } = useQuery({
-    queryKey: ["account", accountId],
-    queryFn: async () => {
-      const { data } = await api.get(`/account/${accountId}`);
-      return data;
-    },
-  });
+  const { data: account } = useAccountControllerGetAccount(accountId || "");
 
   return (
     <>

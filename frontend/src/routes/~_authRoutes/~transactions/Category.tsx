@@ -1,4 +1,4 @@
-import { Tag, X } from "lucide-react";
+import { Tag } from "lucide-react";
 import {
   Combobox,
   ComboboxOptionProps,
@@ -7,19 +7,23 @@ import {
   useCombobox,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { match, P } from "ts-pattern";
+import { match } from "ts-pattern";
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/data/api";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  getTransactionControllerListTransactionsQueryKey,
+  TransactionResponseDto,
+  useCategoryControllerCreateCategory,
+  useCategoryControllerFindAll,
+  useTransactionControllerLinkCategory,
+} from "@/data/api";
 
-export function Category({ transaction }: { transaction: any }) {
-  const { data: categories, refetch } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await api.get("/category");
-      return res.data;
-    },
-  });
+export function Category({
+  transaction,
+}: {
+  transaction: TransactionResponseDto;
+}) {
+  const { data: categories, refetch } = useCategoryControllerFindAll();
   const queryClient = useQueryClient();
   const [opened, handlers] = useDisclosure(transaction.categories.length === 0);
   const combobox = useCombobox({
@@ -31,41 +35,50 @@ export function Category({ transaction }: { transaction: any }) {
     transaction.categories?.[0]?.category.name || ""
   );
 
-  const { mutate: createCategory, isPending: isCreatingCategory } = useMutation(
-    {
-      mutationFn: async (category: string) => {
-        const res = await api.post("/category", { category });
-        return res.data;
+  const { mutate: createCategory, isPending: isCreatingCategory } =
+    useCategoryControllerCreateCategory({
+      mutation: {
+        onSuccess: (data) => {
+          refetch();
+          linkCategory({
+            transactionId: transaction.id,
+            data: {
+              categoryId: data.id,
+            },
+          });
+        },
       },
-      onSuccess: (data) => {
-        refetch();
-        linkCategory(data.id);
-      },
-    }
-  );
+    });
 
-  const { mutate: linkCategory, isPending: isLinkingCategory } = useMutation({
-    mutationFn: async (categoryId: string) => {
-      const res = await api.post(`/transaction/${transaction.id}/category`, {
-        categoryId,
-      });
-      return res.data;
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.refetchQueries({ queryKey: ["allTransactions"] }),
-        queryClient.refetchQueries({ queryKey: ["uncategorizedTransactions"] }),
-      ]);
-      handlers.close();
-    },
-  });
+  const { mutate: linkCategory, isPending: isLinkingCategory } =
+    useTransactionControllerLinkCategory({
+      mutation: {
+        onSuccess: async () => {
+          await Promise.all([
+            queryClient.refetchQueries({
+              queryKey: getTransactionControllerListTransactionsQueryKey(),
+            }),
+            queryClient.refetchQueries({
+              queryKey: getTransactionControllerListTransactionsQueryKey({
+                uncategorizedOnly: true,
+              }),
+            }),
+          ]);
+        },
+      },
+    });
 
   const onSubmit = (val: string, optionProps: ComboboxOptionProps) => {
     if (val === "$create") {
-      createCategory(search);
+      createCategory({ data: { category: search } });
     } else {
       setValue(optionProps.children as string);
-      linkCategory(val);
+      linkCategory({
+        transactionId: transaction.id,
+        data: {
+          categoryId: val,
+        },
+      });
     }
 
     combobox.closeDropdown();
@@ -74,15 +87,15 @@ export function Category({ transaction }: { transaction: any }) {
   if (!categories) return null;
 
   const exactOptionMatch = categories.some(
-    (category: any) => category.name === search
+    (category) => category.name === search
   );
   const filteredOptions = exactOptionMatch
     ? categories
-    : categories.filter((category: any) =>
+    : categories.filter((category) =>
         category.name.toLowerCase().includes(search.toLowerCase().trim())
       );
 
-  const options = filteredOptions.map((category: any) => (
+  const options = filteredOptions.map((category) => (
     <Combobox.Option value={category.id} key={category.id}>
       {category.name}
     </Combobox.Option>

@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+src/data/api.ts
+
+# TypeScript incremental build info
+*.tsbuildinfo

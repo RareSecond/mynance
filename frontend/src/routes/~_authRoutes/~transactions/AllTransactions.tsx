@@ -3,17 +3,10 @@ import { P } from "ts-pattern";
 import { Skeleton } from "@mantine/core";
 import { match } from "ts-pattern";
 import { Transaction } from "./Transaction";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/data/api";
+import { useTransactionControllerListTransactions } from "@/data/api";
 
 export function AllTransactions() {
-  const { data: transactions } = useQuery({
-    queryKey: ["allTransactions"],
-    queryFn: async () => {
-      const response = await api.get("/transaction");
-      return response.data;
-    },
-  });
+  const { data: transactions } = useTransactionControllerListTransactions();
 
   return (
     <div className="flex flex-col gap-2">

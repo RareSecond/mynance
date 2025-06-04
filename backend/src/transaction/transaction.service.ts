@@ -175,8 +175,9 @@ export class TransactionService {
       .with('income', () => Prisma.sql`value DESC`)
       .with('combined', () => Prisma.sql`value DESC`)
       .exhaustive();
-    const categoriesWithAmount = await this.databaseService
-      .$queryRaw(Prisma.sql`
+    const categoriesWithAmount = await this.databaseService.$queryRaw<
+      { name: string; value: number }[]
+    >(Prisma.sql`
     SELECT 
   c.name as name,
   SUM(tc.amount) as value

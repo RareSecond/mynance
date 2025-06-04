@@ -1,9 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { api } from "../../../../../data/api";
 import { Card, Skeleton, Text, Button } from "@mantine/core";
 import { match, P } from "ts-pattern";
 import { SuccessIllustration } from "./SuccessIllustration";
+import {
+  useAccountControllerCreateAccounts,
+  useRequisitionControllerGetAccounts,
+} from "@/data/api";
 
 export const Route = createFileRoute(
   "/_authRoutes/settings/accounts/requisition/callback"
@@ -19,22 +21,21 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { ref } = Route.useSearch();
 
-  const { data } = useQuery({
-    queryKey: ["externalAccounts", ref],
-    queryFn: () => api.get(`/requisition/${ref}/accounts`),
+  const { data: accounts } = useRequisitionControllerGetAccounts(ref || "", {
+    query: {
+      enabled: !!ref,
+    },
   });
 
   const {
     mutate: createAccounts,
     isPending,
     isSuccess,
-  } = useMutation({
-    mutationFn: () =>
-      api.post("/account", {
-        externalRequisitionId: ref,
-        accounts: data?.data.map((account) => account.id),
-      }),
-  });
+  } = useAccountControllerCreateAccounts();
+
+  if (!ref) {
+    return <div>No ref</div>;
+  }
 
   if (isSuccess) {
     return (
@@ -51,7 +52,7 @@ function RouteComponent() {
     <div>
       <Text className="text-2xl font-bold mb-4">About to link accounts</Text>
       <div className="flex flex-col gap-4">
-        {match(data)
+        {match(accounts)
           .with(P.nullish, () => (
             <>
               <Skeleton height={80} />
@@ -59,24 +60,37 @@ function RouteComponent() {
               <Skeleton height={80} />
             </>
           ))
-          .otherwise((data) => {
-            return data.data.map((account) => {
-              return (
-                <Card key={account.id} className="bg-dark-card">
-                  <Text className="text-lg font-bold">{account.iban}</Text>
-                  <Text className="text-sm text-gray-400">{account.name}</Text>
-                </Card>
-              );
-            });
+          .otherwise((accounts) => {
+            return (
+              <>
+                {accounts.map((account) => {
+                  return (
+                    <Card key={account.id} className="bg-dark-card">
+                      <Text className="text-lg font-bold">{account.iban}</Text>
+                      <Text className="text-sm text-gray-400">
+                        {account.name}
+                      </Text>
+                    </Card>
+                  );
+                })}
+                <Button
+                  className="bg-purple-primary text-white disabled:bg-purple-light"
+                  disabled={!accounts}
+                  onClick={() =>
+                    createAccounts({
+                      data: {
+                        externalRequisitionId: ref,
+                        accounts: accounts.map((account) => account.id),
+                      },
+                    })
+                  }
+                  loading={isPending}
+                >
+                  Link accounts
+                </Button>
+              </>
+            );
           })}
-        <Button
-          className="bg-purple-primary text-white disabled:bg-purple-light"
-          disabled={!data}
-          onClick={() => createAccounts()}
-          loading={isPending}
-        >
-          Link accounts
-        </Button>
       </div>
     </div>
   );

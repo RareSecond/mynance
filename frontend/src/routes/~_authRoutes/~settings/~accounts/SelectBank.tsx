@@ -1,21 +1,13 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Route } from "./~new";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../../../../data/api";
 import { match, P } from "ts-pattern";
 import { Text, Card } from "@mantine/core";
-import { GetBanksResponse } from "@mynance/types";
+import { useBanksControllerGetBanks } from "@/data/api";
 
 export function SelectBank() {
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const { data: banks } = useQuery<GetBanksResponse[]>({
-    queryKey: ["banks"],
-    queryFn: async () => {
-      const res = await api.get("/banks");
-      return res.data;
-    },
-  });
+  const { data: banks } = useBanksControllerGetBanks();
 
   return (
     <div>

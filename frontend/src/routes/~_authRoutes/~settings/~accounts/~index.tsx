@@ -1,30 +1,22 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { api } from "../../../../data/api";
 import { Button, Card, Skeleton, Text } from "@mantine/core";
 import { PageTitle } from "@/components/PageTitle";
 import { match, P } from "ts-pattern";
 import { CreditCard, RefreshCw, Settings } from "lucide-react";
+import {
+  useAccountControllerListAccounts,
+  useTransactionControllerImportTransactions,
+} from "@/data/api";
 
 export const Route = createFileRoute("/_authRoutes/settings/accounts/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { data: accounts } = useQuery({
-    queryKey: ["accounts"],
-    queryFn: async () => {
-      const response = await api.get("/account");
-      return response.data;
-    },
-  });
+  const { data: accounts } = useAccountControllerListAccounts();
 
-  const { mutate: importTransactions } = useMutation({
-    mutationFn: async (accountId: string) => {
-      const response = await api.post("/transaction/import", { accountId });
-      return response.data;
-    },
-  });
+  const { mutate: importTransactions } =
+    useTransactionControllerImportTransactions();
 
   return (
     <div>
@@ -59,7 +51,13 @@ function RouteComponent() {
                     size="sm"
                     leftSection={<RefreshCw size={12} />}
                     color="primary"
-                    onClick={() => importTransactions(account.id)}
+                    onClick={() =>
+                      importTransactions({
+                        data: {
+                          accountId: account.id,
+                        },
+                      })
+                    }
                   >
                     Fetch transactions
                   </Button>
