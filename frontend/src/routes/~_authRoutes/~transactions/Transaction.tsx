@@ -1,9 +1,10 @@
-import { Card, Collapse, Text } from "@mantine/core";
+import { Button, Card, Collapse, Text, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Calendar, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import { Category } from "./Category";
 import { TransactionResponseDto } from "@/data/api";
+import { useState } from "react";
 
 export function Transaction({
   transaction,
@@ -13,6 +14,7 @@ export function Transaction({
   defaultOpen?: boolean;
 }) {
   const [opened, handlers] = useDisclosure(defaultOpen);
+  const [localTransaction, setLocalTransaction] = useState(transaction);
 
   return (
     <Card
@@ -49,6 +51,32 @@ export function Transaction({
             </Text>
           </div>
           <Category transaction={transaction} />
+          <div onClick={(e) => e.stopPropagation()}>
+            <Textarea
+              placeholder="Note"
+              value={localTransaction.note ?? ""}
+              onChange={(e) => {
+                setLocalTransaction({
+                  ...localTransaction,
+                  note: e.target.value,
+                });
+              }}
+              classNames={{
+                wrapper: "mt-1",
+                input: "bg-dark-secondary text-text-muted border-none",
+              }}
+            />
+          </div>
+          <div className="flex justify-end mt-2">
+            <Button
+              variant="light"
+              color="success"
+              size="xs"
+              className="text-sm"
+            >
+              Save
+            </Button>
+          </div>
         </>
       </Collapse>
     </Card>

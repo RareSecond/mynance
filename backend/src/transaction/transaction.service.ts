@@ -40,6 +40,7 @@ export class TransactionService {
         description: true,
         counterPartyName: true,
         createdAt: true,
+        note: true,
         categories: {
           select: {
             category: {

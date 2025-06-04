@@ -53,6 +53,7 @@ model Transaction {
   currency         String
   description      String
   counterPartyName String
+  note             String?
   categories       TransactionCategory[]
 }
 

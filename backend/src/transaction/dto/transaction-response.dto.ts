@@ -14,5 +14,6 @@ export class TransactionResponseDto {
   description: string;
   counterPartyName: string;
   createdAt: Date;
+  note?: string;
   categories: TransactionCategoryDto[];
 }
