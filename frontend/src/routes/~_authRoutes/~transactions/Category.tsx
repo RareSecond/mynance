@@ -52,6 +52,7 @@ export function Category({
     if (val === "$create") {
       createCategory({ data: { category: search } });
     } else {
+      setSearch("");
       setValue(optionProps.children as string);
       onCategoryChange(val);
     }
