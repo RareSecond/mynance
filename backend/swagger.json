@@ -399,9 +399,9 @@
         ]
       }
     },
-    "/transaction/{transactionId}/category": {
-      "post": {
-        "operationId": "TransactionController_linkCategory",
+    "/transaction/{transactionId}": {
+      "patch": {
+        "operationId": "TransactionController_updateTransaction",
         "parameters": [
           {
             "name": "transactionId",
@@ -417,17 +417,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LinkCategoryDto"
+                "$ref": "#/components/schemas/UpdateTransactionDto"
               }
             }
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": ""
           }
         },
-        "summary": "Link a category to a transaction",
+        "summary": "Update a transaction",
         "tags": [
           "Transaction"
         ]
@@ -829,16 +829,16 @@
           "accountId"
         ]
       },
-      "LinkCategoryDto": {
+      "UpdateTransactionDto": {
         "type": "object",
         "properties": {
+          "note": {
+            "type": "string"
+          },
           "categoryId": {
             "type": "string"
           }
-        },
-        "required": [
-          "categoryId"
-        ]
+        }
       },
       "CreateCategoryDto": {
         "type": "object",

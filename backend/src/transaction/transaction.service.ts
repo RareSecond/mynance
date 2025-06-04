@@ -148,21 +148,40 @@ export class TransactionService {
     return 'Unknown';
   }
 
-  async linkCategory(transactionId: string, categoryId: string) {
-    const transaction = await this.get(transactionId);
+  async updateTransaction(
+    transactionId: string,
+    updateDto: { note?: string; categoryId?: string },
+  ) {
+    await this.databaseService.$transaction(async (tx) => {
+      if (updateDto.categoryId) {
+        // Delete existing categories
+        await tx.transactionCategory.deleteMany({
+          where: {
+            transactionId,
+          },
+        });
 
-    await this.databaseService.transactionCategory.deleteMany({
-      where: {
-        transactionId,
-      },
-    });
+        // Create new category link
+        await tx.transactionCategory.create({
+          data: {
+            transactionId,
+            categoryId: updateDto.categoryId,
+            amount: (
+              await tx.transaction.findUnique({
+                where: { id: transactionId },
+                select: { amount: true },
+              })
+            ).amount,
+          },
+        });
+      }
 
-    await this.databaseService.transactionCategory.create({
-      data: {
-        transactionId,
-        categoryId,
-        amount: transaction.amount,
-      },
+      if (updateDto.note !== undefined) {
+        await tx.transaction.update({
+          where: { id: transactionId },
+          data: { note: updateDto.note },
+        });
+      }
     });
   }
 

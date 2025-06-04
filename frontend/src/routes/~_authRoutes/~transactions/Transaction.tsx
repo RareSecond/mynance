@@ -3,8 +3,13 @@ import { useDisclosure } from "@mantine/hooks";
 import { Calendar, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import { Category } from "./Category";
-import { TransactionResponseDto } from "@/data/api";
+import {
+  getTransactionControllerListTransactionsQueryKey,
+  TransactionResponseDto,
+  useTransactionControllerUpdateTransaction,
+} from "@/data/api";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function Transaction({
   transaction,
@@ -14,7 +19,39 @@ export function Transaction({
   defaultOpen?: boolean;
 }) {
   const [opened, handlers] = useDisclosure(defaultOpen);
-  const [localTransaction, setLocalTransaction] = useState(transaction);
+  const [note, setNote] = useState(transaction.note ?? "");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    string | undefined
+  >(transaction.categories[0]?.category.id);
+  const queryClient = useQueryClient();
+
+  const { mutate: updateTransaction, isPending } =
+    useTransactionControllerUpdateTransaction({
+      mutation: {
+        onSuccess: () => {
+          Promise.all([
+            queryClient.refetchQueries({
+              queryKey: getTransactionControllerListTransactionsQueryKey(),
+            }),
+            queryClient.refetchQueries({
+              queryKey: getTransactionControllerListTransactionsQueryKey({
+                uncategorizedOnly: true,
+              }),
+            }),
+          ]);
+        },
+      },
+    });
+
+  const handleSave = () => {
+    updateTransaction({
+      transactionId: transaction.id,
+      data: {
+        note,
+        categoryId: selectedCategoryId,
+      },
+    });
+  };
 
   return (
     <Card
@@ -50,16 +87,16 @@ export function Transaction({
               {format(transaction.createdAt, "dd/MM/yyyy (HH:mm)")}
             </Text>
           </div>
-          <Category transaction={transaction} />
+          <Category
+            transaction={transaction}
+            onCategoryChange={(categoryId) => setSelectedCategoryId(categoryId)}
+          />
           <div onClick={(e) => e.stopPropagation()}>
             <Textarea
               placeholder="Note"
-              value={localTransaction.note ?? ""}
+              value={note}
               onChange={(e) => {
-                setLocalTransaction({
-                  ...localTransaction,
-                  note: e.target.value,
-                });
+                setNote(e.target.value);
               }}
               classNames={{
                 wrapper: "mt-1",
@@ -73,6 +110,11 @@ export function Transaction({
               color="success"
               size="xs"
               className="text-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSave();
+              }}
+              loading={isPending}
             >
               Save
             </Button>
