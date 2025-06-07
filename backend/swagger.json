@@ -751,10 +751,14 @@
         "properties": {
           "category": {
             "$ref": "#/components/schemas/CategoryDto"
+          },
+          "amount": {
+            "type": "number"
           }
         },
         "required": [
-          "category"
+          "category",
+          "amount"
         ]
       },
       "TransactionResponseDto": {
@@ -825,14 +829,32 @@
           "accountId"
         ]
       },
+      "CategoryAmountDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "categoryId",
+          "amount"
+        ]
+      },
       "UpdateTransactionDto": {
         "type": "object",
         "properties": {
           "note": {
             "type": "string"
           },
-          "categoryId": {
-            "type": "string"
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryAmountDto"
+            }
           }
         }
       },
