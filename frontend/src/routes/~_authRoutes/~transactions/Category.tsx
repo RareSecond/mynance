@@ -5,7 +5,6 @@ import {
   Text,
   useCombobox,
   NumberInput,
-  Button,
   Group,
   ActionIcon,
 } from "@mantine/core";
