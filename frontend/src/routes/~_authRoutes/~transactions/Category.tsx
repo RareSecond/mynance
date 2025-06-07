@@ -30,11 +30,14 @@ export function Category({
   transaction: TransactionResponseDto;
   onCategoriesChange: (categories: CategoryWithAmount[]) => void;
 }) {
-  const { data: categories, refetch } = useCategoryControllerFindAll({
-    query: {
-      initialData: [],
-    },
-  });
+  const { data: categories, refetch } = useCategoryControllerFindAll(
+    { enabled: true },
+    {
+      query: {
+        initialData: [],
+      },
+    }
+  );
   const [opened, handlers] = useDisclosure(transaction.categories.length === 0);
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),

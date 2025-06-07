@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '@/database/database.service';
 import { CurrentUserService } from '@/auth/current-user.service';
 import { AccountService } from '@/account/account.service';
-import { UpdateCategoryDto } from './dto/category.dto';
+import { UpdateCategoryDto, FindCategoriesQueryDto } from './dto/category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -12,11 +12,12 @@ export class CategoryService {
     private readonly accountService: AccountService,
   ) {}
 
-  async findAll() {
+  async findAll(query?: FindCategoriesQueryDto) {
     const user = this.currentUserService.getUser();
 
     return this.databaseService.category.findMany({
       where: {
+        ...(query?.enabled !== undefined ? { enabled: query.enabled } : {}),
         account: {
           users: {
             some: {
