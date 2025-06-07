@@ -5,5 +5,4 @@ export class CreateCategoryDto {
 export class CategoryDto {
   id: string;
   name: string;
-  userId: string;
 }

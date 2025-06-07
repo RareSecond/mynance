@@ -14,7 +14,6 @@ model User {
   updatedAt    DateTime      @updatedAt
   requisitions Requisition[]
   accounts     Account[]
-  categories   Category[]
 }
 
 model Requisition {
@@ -39,6 +38,7 @@ model Account {
   users         User[]
   iban          String
   name          String
+  categories    Category[]
 }
 
 model Transaction {
@@ -61,8 +61,8 @@ model Category {
   id           String                @id @default(uuid())
   name         String                @unique
   transactions TransactionCategory[]
-  userId       String
-  user         User                  @relation(fields: [userId], references: [id])
+  accountId    String
+  account      Account               @relation(fields: [accountId], references: [id], onDelete: Cascade)
 }
 
 model TransactionCategory {
