@@ -739,15 +739,11 @@
           },
           "name": {
             "type": "string"
-          },
-          "userId": {
-            "type": "string"
           }
         },
         "required": [
           "id",
-          "name",
-          "userId"
+          "name"
         ]
       },
       "TransactionCategoryDto": {
