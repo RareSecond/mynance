@@ -7,6 +7,7 @@ import {
   NumberInput,
   Button,
   Group,
+  ActionIcon,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { match } from "ts-pattern";
@@ -47,11 +48,11 @@ export function Category({
     transaction.categories.map((tc) => ({
       categoryId: tc.category.id,
       categoryName: tc.category.name,
-      amount: Math.abs(tc.amount),
+      amount: tc.amount,
     }))
   );
   const [currentAmount, setCurrentAmount] = useState<number>(
-    Math.abs(transaction.amount)
+    transaction.amount
   );
 
   const { mutate: createCategory, isPending: isCreatingCategory } =
@@ -79,15 +80,12 @@ export function Category({
       const category = categories.find((c) => c.id === val);
       if (category) {
         const newRemainingAmount =
-          Math.abs(transaction.amount) -
+          transaction.amount -
           selectedCategories.reduce((sum, cat) => sum + cat.amount, 0);
         const newCategory: CategoryWithAmount = {
           categoryId: category.id,
           categoryName: category.name,
-          amount:
-            currentAmount > newRemainingAmount
-              ? newRemainingAmount
-              : currentAmount,
+          amount: currentAmount,
         };
         const updatedCategories = [...selectedCategories, newCategory];
         setSelectedCategories(updatedCategories);
@@ -105,7 +103,7 @@ export function Category({
       (c) => c.categoryId !== categoryId
     );
     const newRemainingAmount =
-      Math.abs(transaction.amount) -
+      transaction.amount -
       updatedCategories.reduce((sum, cat) => sum + cat.amount, 0);
     setSelectedCategories(updatedCategories);
     onCategoriesChange(updatedCategories);
@@ -133,7 +131,7 @@ export function Category({
     ));
 
   const remainingAmount =
-    Math.abs(transaction.amount) -
+    transaction.amount -
     selectedCategories.reduce((sum, cat) => sum + cat.amount, 0);
 
   const handleAmountChange = (value: string | number) => {
@@ -156,21 +154,21 @@ export function Category({
           .with(true, () => (
             <div className="flex-1">
               {selectedCategories.map((category) => (
-                <Group key={category.categoryId} className="mb-2">
+                <Group key={category.categoryId}>
                   <Text size="sm">{category.categoryName}</Text>
                   <Text size="sm" c="dimmed">
                     {category.amount.toFixed(2)} {transaction.currency}
                   </Text>
-                  <Button
+                  <ActionIcon
                     variant="subtle"
                     size="xs"
                     onClick={() => removeCategory(category.categoryId)}
                   >
                     <X size={14} />
-                  </Button>
+                  </ActionIcon>
                 </Group>
               ))}
-              {remainingAmount > 0 && (
+              {remainingAmount !== 0 && (
                 <div className="flex gap-2 items-center">
                   <Combobox
                     store={combobox}
@@ -215,8 +213,6 @@ export function Category({
                     size="xs"
                     value={currentAmount}
                     onChange={handleAmountChange}
-                    min={0}
-                    max={remainingAmount}
                     placeholder={`Amount (max ${remainingAmount.toFixed(2)})`}
                     classNames={{
                       input: "bg-dark-secondary text-text-muted border-none",
