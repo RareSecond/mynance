@@ -1,4 +1,9 @@
+export class CategoryAmountDto {
+  categoryId: string;
+  amount: number;
+}
+
 export class UpdateTransactionDto {
   note?: string;
-  categoryId?: string;
+  categories?: CategoryAmountDto[];
 }

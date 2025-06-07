@@ -5,6 +5,7 @@ export class CategoryDto {
 
 export class TransactionCategoryDto {
   category: CategoryDto;
+  amount: number;
 }
 
 export class TransactionResponseDto {

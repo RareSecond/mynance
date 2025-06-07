@@ -43,6 +43,7 @@ export class TransactionService {
         note: true,
         categories: {
           select: {
+            amount: true,
             category: {
               select: {
                 id: true,
@@ -150,10 +151,13 @@ export class TransactionService {
 
   async updateTransaction(
     transactionId: string,
-    updateDto: { note?: string; categoryId?: string },
+    updateDto: {
+      note?: string;
+      categories?: { categoryId: string; amount: number }[];
+    },
   ) {
     await this.databaseService.$transaction(async (tx) => {
-      if (updateDto.categoryId) {
+      if (updateDto.categories) {
         // Delete existing categories
         await tx.transactionCategory.deleteMany({
           where: {
@@ -161,18 +165,13 @@ export class TransactionService {
           },
         });
 
-        // Create new category link
-        await tx.transactionCategory.create({
-          data: {
+        // Create new category links
+        await tx.transactionCategory.createMany({
+          data: updateDto.categories.map((category) => ({
             transactionId,
-            categoryId: updateDto.categoryId,
-            amount: (
-              await tx.transaction.findUnique({
-                where: { id: transactionId },
-                select: { amount: true },
-              })
-            ).amount,
-          },
+            categoryId: category.categoryId,
+            amount: category.amount,
+          })),
         });
       }
 

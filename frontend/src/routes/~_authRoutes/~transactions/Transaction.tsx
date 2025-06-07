@@ -2,7 +2,7 @@ import { Button, Card, Collapse, Text, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Calendar, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
-import { Category } from "./Category";
+import { Category, CategoryWithAmount } from "./Category";
 import {
   getTransactionControllerListTransactionsQueryKey,
   TransactionResponseDto,
@@ -20,9 +20,15 @@ export function Transaction({
 }) {
   const [opened, handlers] = useDisclosure(defaultOpen);
   const [note, setNote] = useState(transaction.note ?? "");
-  const [selectedCategoryId, setSelectedCategoryId] = useState<
-    string | undefined
-  >(transaction.categories[0]?.category.id);
+  const [selectedCategories, setSelectedCategories] = useState<
+    CategoryWithAmount[]
+  >(
+    transaction.categories.map((tc) => ({
+      categoryId: tc.category.id,
+      categoryName: tc.category.name,
+      amount: transaction.amount > 0 ? transaction.amount : -transaction.amount,
+    }))
+  );
   const queryClient = useQueryClient();
 
   const { mutate: updateTransaction, isPending } =
@@ -48,7 +54,10 @@ export function Transaction({
       transactionId: transaction.id,
       data: {
         note,
-        categoryId: selectedCategoryId,
+        categories: selectedCategories.map((cat) => ({
+          categoryId: cat.categoryId,
+          amount: cat.amount,
+        })),
       },
     });
   };
@@ -89,7 +98,9 @@ export function Transaction({
           </div>
           <Category
             transaction={transaction}
-            onCategoryChange={(categoryId) => setSelectedCategoryId(categoryId)}
+            onCategoriesChange={(categories) =>
+              setSelectedCategories(categories)
+            }
           />
           <div onClick={(e) => e.stopPropagation()}>
             <Textarea
