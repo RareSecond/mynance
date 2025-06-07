@@ -19,6 +19,7 @@ import { Route as AuthRoutesTransactionsIndexImport } from './routes/~_authRoute
 import { Route as AuthRoutesSettingsIndexImport } from './routes/~_authRoutes/~settings/~index'
 import { Route as AuthRoutesAnalyticsIndexImport } from './routes/~_authRoutes/~analytics/~index'
 import { Route as AuthRoutesSettingsAccountsNewImport } from './routes/~_authRoutes/~settings/~accounts/~new'
+import { Route as AuthRoutesSettingsCategoriesIndexImport } from './routes/~_authRoutes/~settings/~categories/~index'
 import { Route as AuthRoutesSettingsAccountsIndexImport } from './routes/~_authRoutes/~settings/~accounts/~index'
 import { Route as AuthRoutesSettingsAccountsRequisitionCallbackImport } from './routes/~_authRoutes/~settings/~accounts/~requisition/~callback'
 import { Route as AuthRoutesSettingsAccountsAccountIdIndexImport } from './routes/~_authRoutes/~settings/~accounts/~$accountId/~index'
@@ -70,6 +71,13 @@ const AuthRoutesSettingsAccountsNewRoute =
   AuthRoutesSettingsAccountsNewImport.update({
     id: '/settings/accounts/new',
     path: '/settings/accounts/new',
+    getParentRoute: () => AuthRoutesRoute,
+  } as any)
+
+const AuthRoutesSettingsCategoriesIndexRoute =
+  AuthRoutesSettingsCategoriesIndexImport.update({
+    id: '/settings/categories/',
+    path: '/settings/categories/',
     getParentRoute: () => AuthRoutesRoute,
   } as any)
 
@@ -154,6 +162,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRoutesSettingsAccountsIndexImport
       parentRoute: typeof AuthRoutesImport
     }
+    '/_authRoutes/settings/categories/': {
+      id: '/_authRoutes/settings/categories/'
+      path: '/settings/categories'
+      fullPath: '/settings/categories'
+      preLoaderRoute: typeof AuthRoutesSettingsCategoriesIndexImport
+      parentRoute: typeof AuthRoutesImport
+    }
     '/_authRoutes/settings/accounts/new': {
       id: '/_authRoutes/settings/accounts/new'
       path: '/settings/accounts/new'
@@ -186,6 +201,7 @@ interface AuthRoutesRouteChildren {
   AuthRoutesSettingsIndexRoute: typeof AuthRoutesSettingsIndexRoute
   AuthRoutesTransactionsIndexRoute: typeof AuthRoutesTransactionsIndexRoute
   AuthRoutesSettingsAccountsIndexRoute: typeof AuthRoutesSettingsAccountsIndexRoute
+  AuthRoutesSettingsCategoriesIndexRoute: typeof AuthRoutesSettingsCategoriesIndexRoute
   AuthRoutesSettingsAccountsNewRoute: typeof AuthRoutesSettingsAccountsNewRoute
   AuthRoutesSettingsAccountsAccountIdIndexRoute: typeof AuthRoutesSettingsAccountsAccountIdIndexRoute
   AuthRoutesSettingsAccountsRequisitionCallbackRoute: typeof AuthRoutesSettingsAccountsRequisitionCallbackRoute
@@ -197,6 +213,8 @@ const AuthRoutesRouteChildren: AuthRoutesRouteChildren = {
   AuthRoutesSettingsIndexRoute: AuthRoutesSettingsIndexRoute,
   AuthRoutesTransactionsIndexRoute: AuthRoutesTransactionsIndexRoute,
   AuthRoutesSettingsAccountsIndexRoute: AuthRoutesSettingsAccountsIndexRoute,
+  AuthRoutesSettingsCategoriesIndexRoute:
+    AuthRoutesSettingsCategoriesIndexRoute,
   AuthRoutesSettingsAccountsNewRoute: AuthRoutesSettingsAccountsNewRoute,
   AuthRoutesSettingsAccountsAccountIdIndexRoute:
     AuthRoutesSettingsAccountsAccountIdIndexRoute,
@@ -228,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthRoutesSettingsIndexRoute
   '/transactions': typeof AuthRoutesTransactionsIndexRoute
   '/settings/accounts': typeof AuthRoutesSettingsAccountsIndexRoute
+  '/settings/categories': typeof AuthRoutesSettingsCategoriesIndexRoute
   '/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
   '/settings/accounts/$accountId': typeof AuthRoutesSettingsAccountsAccountIdIndexRoute
   '/settings/accounts/requisition/callback': typeof AuthRoutesSettingsAccountsRequisitionCallbackRoute
@@ -241,6 +260,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthRoutesSettingsIndexRoute
   '/transactions': typeof AuthRoutesTransactionsIndexRoute
   '/settings/accounts': typeof AuthRoutesSettingsAccountsIndexRoute
+  '/settings/categories': typeof AuthRoutesSettingsCategoriesIndexRoute
   '/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
   '/settings/accounts/$accountId': typeof AuthRoutesSettingsAccountsAccountIdIndexRoute
   '/settings/accounts/requisition/callback': typeof AuthRoutesSettingsAccountsRequisitionCallbackRoute
@@ -256,6 +276,7 @@ export interface FileRoutesById {
   '/_authRoutes/settings/': typeof AuthRoutesSettingsIndexRoute
   '/_authRoutes/transactions/': typeof AuthRoutesTransactionsIndexRoute
   '/_authRoutes/settings/accounts/': typeof AuthRoutesSettingsAccountsIndexRoute
+  '/_authRoutes/settings/categories/': typeof AuthRoutesSettingsCategoriesIndexRoute
   '/_authRoutes/settings/accounts/new': typeof AuthRoutesSettingsAccountsNewRoute
   '/_authRoutes/settings/accounts/$accountId/': typeof AuthRoutesSettingsAccountsAccountIdIndexRoute
   '/_authRoutes/settings/accounts/requisition/callback': typeof AuthRoutesSettingsAccountsRequisitionCallbackRoute
@@ -271,6 +292,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/transactions'
     | '/settings/accounts'
+    | '/settings/categories'
     | '/settings/accounts/new'
     | '/settings/accounts/$accountId'
     | '/settings/accounts/requisition/callback'
@@ -283,6 +305,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/transactions'
     | '/settings/accounts'
+    | '/settings/categories'
     | '/settings/accounts/new'
     | '/settings/accounts/$accountId'
     | '/settings/accounts/requisition/callback'
@@ -296,6 +319,7 @@ export interface FileRouteTypes {
     | '/_authRoutes/settings/'
     | '/_authRoutes/transactions/'
     | '/_authRoutes/settings/accounts/'
+    | '/_authRoutes/settings/categories/'
     | '/_authRoutes/settings/accounts/new'
     | '/_authRoutes/settings/accounts/$accountId/'
     | '/_authRoutes/settings/accounts/requisition/callback'
@@ -334,6 +358,7 @@ export const routeTree = rootRoute
         "/_authRoutes/settings/",
         "/_authRoutes/transactions/",
         "/_authRoutes/settings/accounts/",
+        "/_authRoutes/settings/categories/",
         "/_authRoutes/settings/accounts/new",
         "/_authRoutes/settings/accounts/$accountId/",
         "/_authRoutes/settings/accounts/requisition/callback"
@@ -367,6 +392,10 @@ export const routeTree = rootRoute
     },
     "/_authRoutes/settings/accounts/": {
       "filePath": "~_authRoutes/~settings/~accounts/~index.tsx",
+      "parent": "/_authRoutes"
+    },
+    "/_authRoutes/settings/categories/": {
+      "filePath": "~_authRoutes/~settings/~categories/~index.tsx",
       "parent": "/_authRoutes"
     },
     "/_authRoutes/settings/accounts/new": {

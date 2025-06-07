@@ -1,6 +1,6 @@
-import { Card, Text, NavLink, Button } from "@mantine/core";
+import { Card, Text, Button } from "@mantine/core";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Wallet } from "lucide-react";
+import { Wallet, Tags } from "lucide-react";
 import { useUser } from "../UserContext";
 import { PageTitle } from "@/components/PageTitle";
 
@@ -16,19 +16,27 @@ function RouteComponent() {
       <PageTitle title="Settings" />
       <Text className="text-md text-text-muted ">Bank Accounts</Text>
       <Card className="bg-dark-card p-2 mb-4">
-        <NavLink
-          label="Linked Accounts"
-          component={Link}
+        <Link
           to="/settings/accounts"
-          leftSection={<Wallet />}
-          classNames={{
-            label: "text-lg",
-          }}
-        />
+          className="flex items-center gap-2 px-3 py-2 -mx-2 -my-2 hover:bg-dark-card-hover rounded-lg transition-colors"
+        >
+          <Wallet size={20} />
+          <Text className="text-lg">Linked Accounts</Text>
+        </Link>
+      </Card>
+      <Text className="text-md text-text-muted ">Categories</Text>
+      <Card className="bg-dark-card p-2 mb-4">
+        <Link
+          to="/settings/categories"
+          className="flex items-center gap-2 px-3 py-2 -mx-2 -my-2 hover:bg-dark-card-hover rounded-lg transition-colors"
+        >
+          <Tags size={20} />
+          <Text className="text-lg">Manage Categories</Text>
+        </Link>
       </Card>
       <Text className="text-md text-text-muted ">User</Text>
       <Card className="bg-dark-card p-2 mb-4">
-        <Text className="px-3 py-2 text-lg">Logged in as {user?.email}</Text>
+        <Text className="text-lg">Logged in as {user?.email}</Text>
       </Card>
       <a href="http://localhost:3000/auth/logout">
         <Button className="w-full" color="danger">
