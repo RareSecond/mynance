@@ -78,16 +78,23 @@ export function Category({
     } else {
       const category = categories.find((c) => c.id === val);
       if (category) {
+        const newRemainingAmount =
+          Math.abs(transaction.amount) -
+          selectedCategories.reduce((sum, cat) => sum + cat.amount, 0);
         const newCategory: CategoryWithAmount = {
           categoryId: category.id,
           categoryName: category.name,
-          amount: currentAmount || 0,
+          amount:
+            currentAmount > newRemainingAmount
+              ? newRemainingAmount
+              : currentAmount,
         };
         const updatedCategories = [...selectedCategories, newCategory];
         setSelectedCategories(updatedCategories);
         onCategoriesChange(updatedCategories);
         setSearch("");
-        setCurrentAmount(remainingAmount);
+        const finalRemainingAmount = newRemainingAmount - newCategory.amount;
+        setCurrentAmount(finalRemainingAmount);
       }
     }
     combobox.closeDropdown();
@@ -97,8 +104,12 @@ export function Category({
     const updatedCategories = selectedCategories.filter(
       (c) => c.categoryId !== categoryId
     );
+    const newRemainingAmount =
+      Math.abs(transaction.amount) -
+      updatedCategories.reduce((sum, cat) => sum + cat.amount, 0);
     setSelectedCategories(updatedCategories);
     onCategoriesChange(updatedCategories);
+    setCurrentAmount(newRemainingAmount);
   };
 
   const exactOptionMatch = categories.some(
