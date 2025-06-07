@@ -60,6 +60,7 @@ model Transaction {
 model Category {
   id           String                @id @default(uuid())
   name         String                @unique
+  enabled      Boolean               @default(true)
   transactions TransactionCategory[]
   accountId    String
   account      Account               @relation(fields: [accountId], references: [id], onDelete: Cascade)

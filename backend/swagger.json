@@ -485,6 +485,46 @@
           "Category"
         ]
       }
+    },
+    "/category/{id}": {
+      "patch": {
+        "operationId": "CategoryController_updateCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Category"
+        ]
+      }
     }
   },
   "info": {
@@ -739,11 +779,15 @@
           },
           "name": {
             "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
           }
         },
         "required": [
           "id",
-          "name"
+          "name",
+          "enabled"
         ]
       },
       "TransactionCategoryDto": {
@@ -868,6 +912,14 @@
         "required": [
           "category"
         ]
+      },
+      "UpdateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
       }
     }
   }

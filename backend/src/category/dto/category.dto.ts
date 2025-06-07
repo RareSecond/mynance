@@ -5,4 +5,9 @@ export class CreateCategoryDto {
 export class CategoryDto {
   id: string;
   name: string;
+  enabled: boolean;
+}
+
+export class UpdateCategoryDto {
+  enabled?: boolean;
 }
