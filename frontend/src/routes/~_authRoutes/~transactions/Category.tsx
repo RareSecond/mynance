@@ -54,7 +54,12 @@ export function Category({
     }))
   );
   const [currentAmount, setCurrentAmount] = useState<number>(
-    transaction.amount
+    Number(
+      (
+        transaction.amount -
+        selectedCategories.reduce((sum, cat) => sum + cat.amount, 0)
+      ).toFixed(2)
+    )
   );
 
   const { mutate: createCategory, isPending: isCreatingCategory } =
@@ -104,9 +109,12 @@ export function Category({
     const updatedCategories = selectedCategories.filter(
       (c) => c.categoryId !== categoryId
     );
-    const newRemainingAmount =
-      transaction.amount -
-      updatedCategories.reduce((sum, cat) => sum + cat.amount, 0);
+    const newRemainingAmount = Number(
+      (
+        transaction.amount -
+        updatedCategories.reduce((sum, cat) => sum + cat.amount, 0)
+      ).toFixed(2)
+    );
     setSelectedCategories(updatedCategories);
     onCategoriesChange(updatedCategories);
     setCurrentAmount(newRemainingAmount);
@@ -131,10 +139,6 @@ export function Category({
         {category.name}
       </Combobox.Option>
     ));
-
-  const remainingAmount =
-    transaction.amount -
-    selectedCategories.reduce((sum, cat) => sum + cat.amount, 0);
 
   const handleAmountChange = (value: string | number) => {
     const numericValue = typeof value === "string" ? parseFloat(value) : value;
@@ -170,7 +174,7 @@ export function Category({
                   </ActionIcon>
                 </Group>
               ))}
-              {remainingAmount !== 0 && (
+              {currentAmount !== 0 && (
                 <div className="flex gap-2 items-center">
                   <Combobox
                     store={combobox}
@@ -215,7 +219,7 @@ export function Category({
                     size="xs"
                     value={currentAmount}
                     onChange={handleAmountChange}
-                    placeholder={`Amount (max ${remainingAmount.toFixed(2)})`}
+                    placeholder={`Amount (max ${currentAmount.toFixed(2)})`}
                     classNames={{
                       input: "bg-dark-secondary text-text-muted border-none",
                     }}
